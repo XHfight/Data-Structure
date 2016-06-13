@@ -271,3 +271,60 @@ void BubbleSort(pLinkList plist)
 		cur = cur->next;
 	}
 }
+
+pListNode CrossOfList1(pLinkList plist1, pLinkList plist2)
+{
+	pListNode cur1 = NULL;
+	pListNode cur2 = NULL;
+
+	assert(plist1 && plist2);
+	cur1 = plist1->pHead;
+	while(cur1)
+	{
+		cur2 = plist2->pHead;
+		while(cur2)
+		{
+			if(cur1 == cur2)
+			{
+				return cur1;
+			}
+			cur2 = cur2->next;
+		}
+
+		cur1 = cur1->next;
+	}
+	return NULL;
+}
+pListNode CrossOfList2(pLinkList plist1, pLinkList plist2)
+{
+	pListNode fast = NULL;
+	pListNode slow = NULL;
+	pListNode cur = NULL;
+	assert(plist1 && plist2);
+	cur = plist1->pHead;
+	fast = plist1->pHead;
+	slow = plist1->pHead;
+
+	while(cur->next)               //找list1的尾结点
+	{
+		cur = cur->next;
+	}
+	cur->next = plist2->pHead;    //将list1的尾连在list2的头上
+
+	while(fast && fast->next)
+	{
+		fast = fast->next->next;
+		slow = slow->next;
+		if(fast == slow)              //链表有环
+		{
+			pListNode find = plist1->pHead; 
+			while(find != slow)       //找环入口点
+			{
+				find = find->next;
+				slow = slow->next;
+			}
+			return find;
+		}
+	}
+	return NULL;
+}

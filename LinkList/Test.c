@@ -106,14 +106,56 @@ void Test5()
 
 	DestoryLinkList(&list);
 }
+void Test6()
+{
+	LinkList list1;
+	LinkList list2;
+	pListNode cur = NULL;
+	pListNode ret = NULL;
+
+	InitLinkList(&list1);
+	InitLinkList(&list2);
+
+	PushBack(&list1, 1);
+	PushBack(&list1, 2);
+	PushBack(&list1, 3);
+	PushBack(&list1, 4);
+	PushBack(&list1, 5);
+	PrintLinkList(&list1);
+	//构建相交链表
+	PushBack(&list2, 11);
+	PushBack(&list2, 22);
+	PushBack(&list2, 33);
+	cur = list2.pHead;
+	while(cur->next)
+	{
+		cur = cur->next;
+	}
+	cur->next = Find(&list1, 2);
+	PrintLinkList(&list2);
+
+	ret = CrossOfList2(&list1, &list2);
+
+	if(ret == NULL)
+	{
+		printf("No Cross\n");
+	}
+	else
+	{
+		printf("CrossPoint:%d\n", ret->data);
+	}
+//	DestoryLinkList(&list1);
+//	DestoryLinkList(&list2);
+
+}
 int main()
 {
 //	Test1();
 //	Test2();
 //	Test3();
 //	Test4();
-	Test5();
-
+//	Test5();
+	Test6();
 	system("pause");
 	return 0;
 }

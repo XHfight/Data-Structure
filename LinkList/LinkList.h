@@ -30,5 +30,7 @@ void Remove(pLinkList plist, DataType x);
 void RemoveAll(pLinkList plist, DataType x);
 void Erase(pLinkList plist, pListNode pos);
 void BubbleSort(pLinkList plist);
+pListNode CrossOfList1(pLinkList plist1, pLinkList plist2);
+pListNode CrossOfList2(pLinkList plist1, pLinkList plist2);
 
 #endif
