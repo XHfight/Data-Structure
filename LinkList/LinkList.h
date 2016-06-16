@@ -32,5 +32,8 @@ void Erase(pLinkList plist, pListNode pos);
 void BubbleSort(pLinkList plist);
 pListNode CrossOfList1(pLinkList plist1, pLinkList plist2);
 pListNode CrossOfList2(pLinkList plist1, pLinkList plist2);
+pListNode CrossOfList3(pLinkList plist1, pLinkList plist2);
+pListNode MergeList(pLinkList plist1, pLinkList plist2);
+pListNode Josephus(pLinkList plist, int k);
 
 #endif

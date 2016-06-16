@@ -151,128 +151,122 @@ void Insert(pLinkList plist, pListNode pos, DataType x) //在pos之前插入
 }
 void Remove(pLinkList plist, DataType x)  //删除数据为x的结点
 {
-	pListNode pos = NULL;
+	pListNode cur = NULL;
+	pListNode prev = NULL;
 	assert(plist);
-	pos = Find(plist, x);
-	if(pos == NULL)
+
+	cur = plist->pHead;
+	while(cur)
 	{
-		printf("no find\n");
-	}
-	else if(pos == plist->pHead)
-	{
-		PopFront(plist);
-	}
-	else
-	{
-		pListNode cur = plist->pHead;
-		while(cur->next != pos)
+		if(cur->data == x)
 		{
-			cur = cur->next;
+			if(cur == plist->pHead) //头结点为要删的结点
+			{
+				PopFront(plist);
+			}
+			else
+			{
+				prev->next = cur->next;
+				free(cur);
+				cur = NULL;
+			}
+			return;
 		}
-		cur->next = pos->next;
-		free(pos);
-		pos = NULL;
+		prev = cur;
+		cur = cur->next;
 	}
+
 }
 void RemoveAll(pLinkList plist, DataType x)
 {
 	pListNode cur = NULL;
+	pListNode prev = NULL;
+
 	assert(plist);
 	cur = plist->pHead;
-	if(plist->pHead == NULL)//空链表
+	while(cur)
 	{
-		return;
-	}
-	else if(plist->pHead->next == NULL)  //只有一个结点
-	{
-		free(cur);
-		cur = NULL;
-		plist->pHead =NULL;
-		return;
-	}
-	while(cur->data == x)  //头
-	{
-		pListNode del = cur;
-		cur = cur->next;
-		plist->pHead = cur;
-		free(del);
-		del = NULL;
-	}
-	while(cur && cur->next)                  //中间和尾
-	{
-		if(cur->next->data == x)
+		if(cur->data == x)
 		{
-			
-			pListNode del = cur->next;
-			cur->next = del->next;
-			free(del);
-			del = NULL;
+			pListNode del = cur;
+			if(cur == plist->pHead)
+			{
+				cur = cur->next;
+				plist->pHead = cur;
+				free(del);
+				del = NULL;
+			}
+			else
+			{
+				prev->next = cur->next;
+				cur = cur->next;
+				free(del);
+				del = NULL;
+			}
+			continue;
 		}
+		prev = cur;
 		cur = cur->next;
 	}
 }
+
 void Erase(pLinkList plist, pListNode pos)
 {
-
-	assert(pos);
+	pListNode prev = NULL;
+	pListNode cur = NULL;
 	assert(plist);
-	if(pos == plist->pHead)
+	if(pos == NULL)
 	{
-		PopFront(plist);
+		return;	
 	}
-	else
+	cur = plist->pHead;
+	while(cur)
 	{
-		pListNode cur = plist->pHead;
-		while(cur->next != pos)
+		if(cur == pos)
 		{
-			cur = cur->next;
+			if(cur == plist->pHead)  //如果删除链表头
+			{
+				PopFront(plist);
+			}
+			else
+			{
+				prev->next = cur->next;
+				free(cur);
+				cur = NULL;
+			}
+			return;
 		}
-		cur->next = pos->next;
-		free(pos);
-		pos = NULL;
-	}
+		prev = cur;		
+		cur = cur->next;
+	}	
 }
+
 void BubbleSort(pLinkList plist)
 {
 	int flag = 0;
-	pListNode cur = NULL;   //控制外循环排序的趟数
-	pListNode log= NULL;   //记录内循环上一次交换的最后一个数
-	pListNode cmp = NULL;  //记录内循环的当前比较值
+	pListNode tail = NULL;   //控制外循环排序的趟数
+	pListNode cur = NULL;
 	assert(plist);
-	log = plist->pHead;
 	cur = plist->pHead;
-
-	while(log)
+	while(cur != tail)
 	{
-		log = log->next;
-	}
-	while(cur->next != NULL)
-	{
-		pListNode node = NULL;
-		cmp = plist->pHead;
-		log = node;
-		flag = 0;
-		while(cmp->next!=log)
+		cur = plist->pHead;
+		while(cur->next != tail)
 		{
-			if(cmp->data > cmp->next->data)
+			if(cur->data > cur->next->data)
 			{
-				DataType tmp = cmp->data;
-				cmp->data = cmp->next->data;
-				cmp->next->data = tmp;
-				node = cmp;
-				flag = 1;
+				DataType tmp = cur->data;
+				cur->data = cur->next->data;
+				cur->next->data = tmp;
 			}
-			cmp = cmp->next;
+			cur = cur->next;
 		}
-		if(flag == 0)
-		{
-			return;
-		}
-		cur = cur->next;
+		tail = cur;
 	}
+
 }
 
-pListNode CrossOfList1(pLinkList plist1, pLinkList plist2)
+pListNode CrossOfList1(pLinkList plist1, pLinkList plist2)//找两个不带环链表的交点（直接法）
 {
 	pListNode cur1 = NULL;
 	pListNode cur2 = NULL;
@@ -295,7 +289,8 @@ pListNode CrossOfList1(pLinkList plist1, pLinkList plist2)
 	}
 	return NULL;
 }
-pListNode CrossOfList2(pLinkList plist1, pLinkList plist2)
+
+pListNode CrossOfList2(pLinkList plist1, pLinkList plist2)//找两个不带环链表的交点（构环法）
 {
 	pListNode fast = NULL;
 	pListNode slow = NULL;
@@ -304,13 +299,15 @@ pListNode CrossOfList2(pLinkList plist1, pLinkList plist2)
 	cur = plist1->pHead;
 	fast = plist1->pHead;
 	slow = plist1->pHead;
-
+	
+	//构造环
 	while(cur->next)               //找list1的尾结点
 	{
 		cur = cur->next;
 	}
 	cur->next = plist2->pHead;    //将list1的尾连在list2的头上
 
+	//检查链表是否有环，并找出环的入口点
 	while(fast && fast->next)
 	{
 		fast = fast->next->next;
@@ -327,4 +324,168 @@ pListNode CrossOfList2(pLinkList plist1, pLinkList plist2)
 		}
 	}
 	return NULL;
+}
+
+pListNode CrossOfList3(pLinkList plist1, pLinkList plist2)//找两个不带环链表的交点（尾结点法）
+{
+	int len1 = 0;
+	int len2 = 0;
+	pListNode cur1 = NULL;
+	pListNode cur2 = NULL;
+	assert(plist1);
+	assert(plist2);
+	if(plist1->pHead==NULL || plist2->pHead == NULL)
+	{
+		return NULL;
+	}
+	cur1 = plist1->pHead;
+	cur2 = plist2->pHead;
+	len1 = 1;
+	len2 = 1;
+	while(cur1->next != NULL)
+	{
+		len1++;
+		cur1 = cur1->next;
+	}
+	while(cur2->next != NULL)
+	{
+		len2++;
+		cur2 = cur2->next;
+	}
+	if(cur1 == cur2)
+	{
+		cur1 = plist1->pHead;
+		cur2 = plist2->pHead;
+		if(len1 > len2)
+		{
+			int len = len1-len2;
+			while(len--)
+			{
+				cur1 = cur1->next;
+			}
+			while(cur1 != cur2)
+			{
+				cur1 = cur1->next;
+				cur2 = cur2->next;
+			}
+			return cur1;
+		}
+		else if(len1 < len2)
+		{
+			int len = len2-len1;
+			while(len--)
+			{
+				cur2 = cur2->next;
+			}
+			while(cur1 != cur2)
+			{
+				cur1 = cur1->next;
+				cur2 = cur2->next;
+			}
+			return cur1;
+		}
+		else
+		{
+			while(cur1 != cur2)
+			{
+				cur1 = cur1->next;
+				cur2 = cur2->next;
+			}
+			return cur1;
+		}
+	}
+	else
+	{
+		return NULL;
+	}
+	
+}
+
+pListNode MergeList(pLinkList plist1, pLinkList plist2)  //合并两个有序链表，合并后的链表依然有序(摘结点法)
+{
+	pListNode newHead = NULL;
+	pListNode tail = NULL;
+
+	pListNode cur1 = NULL;
+	pListNode cur2 = NULL;
+
+	assert(plist1);
+	assert(plist2);
+	if(plist1->pHead == NULL)
+	{
+		return plist2->pHead;
+	}
+	if(plist2->pHead == NULL)
+	{
+		return plist1->pHead;
+	}
+
+	cur1 = plist1->pHead;
+	cur2 = plist2->pHead;
+	if(cur1->data <= cur2->data)  //先设置合并后新链表的头结点
+	{
+		newHead = cur1;
+		tail = cur1;
+		cur1 = cur1->next;
+	}
+	else
+	{
+		newHead = cur2;
+		tail = cur2;
+		cur2 = cur2->next;
+	}
+
+	while(cur1 && cur2)   
+	{
+		
+		if(cur1->data <= cur2->data)
+		{
+			tail->next = cur1;
+			tail = cur1;
+			cur1 = cur1->next;
+		}
+		else
+		{
+			tail->next = cur2;
+			tail = cur2;
+			cur2 = cur2->next;
+		}
+	}
+	if(cur1 == NULL)
+	{
+		tail->next = cur2;
+	}
+	else if(cur2  == NULL)
+	{
+		tail->next = cur1;
+	}
+	return newHead;
+}
+
+pListNode Josephus(pLinkList plist, int k)
+{
+	pListNode cur = NULL;
+	assert(plist);
+	cur = plist->pHead;
+	if(cur == NULL)
+	{
+		return NULL;
+	}
+	while(cur->next != cur)
+	{
+		int num = k-1;
+		pListNode del = NULL;
+		while(--num)
+		{
+			cur = cur->next;
+		}
+		del = cur->next;
+		cur->next = cur->next->next;
+		cur = cur->next;
+		free(del);
+		del = NULL;
+	}
+	return cur;
+
+
 }
