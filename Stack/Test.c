@@ -23,9 +23,24 @@ void Test1()
 	Pop(&s1);
 	Pop(&s1);
 }
+
+void Test2()
+{
+	SqDoubleStack ds;
+	InitDulStack(&ds);
+	Push_Dul(&ds, 1, 1);
+	Push_Dul(&ds, 2, 1);
+	Push_Dul(&ds, 3, 2);
+
+	Pop_Dul(&ds, 2);
+	Pop_Dul(&ds, 1);
+
+}
+
 int main()
 {
-	Test1();
+//	Test1();
+	Test2();
 	system("pause");
 	return 0;
 }

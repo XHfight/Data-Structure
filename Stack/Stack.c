@@ -4,10 +4,11 @@
 
 Status status = OK;
 
+//Ë³ÐòÕ»»ù±¾²Ù×÷
 void InitStack(SqStack *s)
 {
 	assert(s);
-	memset(s->data, 0, MAXSIZE);
+	memset(s->data, 0, sizeof(DataType)*MAXSIZE);
 	s->top = -1;
 }
 
@@ -81,4 +82,72 @@ int StackLength(const SqStack *s)
 {
 	assert(s);
 	return s->top+1;
+}
+
+//Á½Õ»¹²Ïí¿Õ¼ä»ù±¾²Ù×÷
+void InitDulStack(SqDoubleStack *s)
+{
+	assert(s);
+	memset(s->data, 0, sizeof(DataType)*DOUBLE_MAXSIZE);
+	s->top1 = -1;
+	s->top2 = DOUBLE_MAXSIZE;
+}
+
+Status Push_Dul(SqDoubleStack *s, DataType x, int StackNumber)
+{
+	assert(s);
+	assert(StackNumber == 1 || StackNumber == 2);
+
+	if(s->top1+1 == s->top2) //Õ»Âú
+	{
+		printf("DoubleStack is fulled!\n");
+		return ERROR;
+	}
+	else
+	{
+		if(StackNumber == 1)
+		{
+			s->data[++s->top1] = x;
+		}
+		else
+		{
+			s->data[--s->top2] = x;
+		}
+		return OK;
+	}
+}
+
+
+Status Pop_Dul(SqDoubleStack *s, int StackNumber)
+{
+	assert(s);
+	assert(StackNumber == 1 || StackNumber == 2);
+
+	if(StackNumber == 1)
+	{
+		if(s->top1 == -1)  //Õ»¿Õ
+		{
+			printf("DoubleStack is Empty!\n");
+			return ERROR;
+		}
+		else
+		{
+			s->top1--;
+			return OK;
+		}
+	}
+	else
+	{
+		if(s->top2 == DOUBLE_MAXSIZE)  //Õ»¿Õ
+		{
+			printf("DoubleStack is Empty!\n");
+			return ERROR;
+		}
+		else
+		{
+			s->top2++;
+			return OK;
+		}
+
+	}
 }
