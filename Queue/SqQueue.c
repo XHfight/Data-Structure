@@ -27,9 +27,10 @@ void ClearQueue(SqQueue *s)
 Status GetHead(const SqQueue *s, DataType *head)
 {
 	assert(s);
+	assert(head);
 	if (QueueEmpty(s) == FALSE)
 	{
-		*head = s->data[s->rear];
+		*head = s->data[s->front];
 		return OK;
 	}
 	else
