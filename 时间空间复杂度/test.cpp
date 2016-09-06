@@ -3,7 +3,7 @@
 using namespace std;
 
 //二分查找（递归）
-//时间复杂度:O(log2(N))   空间复杂度：O(1)
+//时间复杂度:O(log2(N))   空间复杂度：O(log2(N))
 int BinarySearch(int *_arr, int search, int left, int right)
 {
 	assert(left >= 0);
