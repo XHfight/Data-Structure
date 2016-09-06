@@ -6,24 +6,27 @@ using namespace std;
 //Ê±¼ä¸´ÔÓ¶È:O(log2(N))   ¿Õ¼ä¸´ÔÓ¶È£ºO(1)
 int BinarySearch(int *_arr, int search, int left, int right)
 {
-	assert(left >= 0 && right >= left);
-	while (left <= right)
+	assert(left >= 0);
+	int mid = (right - left) / 2 + left;
+	if (left <= right)
 	{
-		int mid = (right - left) / 2 + left;
 		if (_arr[mid] == search)
 		{
 			return mid;
 		}
 		else if (_arr[mid] > search)
 		{
-			right = mid - 1;
+			BinarySearch(_arr, search, left, mid - 1);
 		}
 		else
 		{
-			left = mid + 1;
+			BinarySearch(_arr, search, mid + 1, right);
 		}
 	}
-	return -1;
+	else
+	{
+		return -1;
+	}
 }
 
 //¹ş·òÂüÊ÷£¨·Çµİ¹é£©
