@@ -1,5 +1,5 @@
 #include "Stack.h"
-
+#include "Queue.h"
 void TestStack()
 {
 	Stack<int> s1;
@@ -16,9 +16,25 @@ void TestStack()
 
 }
 
+void TestQueue()
+{
+	Queue<int> q1;
+	q1.Push(1);
+	q1.Push(2);
+	q1.Push(3);
+	q1.Push(4);
+	while (!q1.Empty())
+	{
+		cout << q1.Front() << endl;
+		q1.Pop();
+	}
+
+}
+
 int main()
 {
-	TestStack();
+	//TestStack();
+	TestQueue();
 	system("pause");
 	return 0;
 }
