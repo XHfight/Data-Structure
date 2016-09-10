@@ -1,5 +1,6 @@
 #include "Stack.h"
 #include "Queue.h"
+#include "Maze.h"
 void TestStack()
 {
 	Stack<int> s1;
@@ -31,10 +32,30 @@ void TestQueue()
 
 }
 
+void TestMaze()
+{
+	int row = 10;
+	int col = 10;
+
+	char* Map = (char*)malloc((row*col)*sizeof(char));
+	Pos mEnter(2, 0);
+	InitMazeMap( Map, row, col);
+	PrintMazeMap(Map, row, col);
+	if(GetPath(Map, row, col, mEnter))
+	{
+		PrintMazeMap(Map, row, col);
+	}
+	else
+	{
+		cout << "没有通路"<<endl;
+	}
+	free(Map);
+}
 int main()
 {
 	//TestStack();
-	TestQueue();
+	//TestQueue();
+	TestMaze();
 	system("pause");
 	return 0;
 }
