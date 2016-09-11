@@ -29,19 +29,20 @@ void TestQueue()
 		cout << q1.Front() << endl;
 		q1.Pop();
 	}
-
 }
 
 void TestMaze()
 {
-	int row = 10;
-	int col = 10;
-
+	int row = 0;
+	int col = 0;
+	GetSize( &row, &col);
 	char* Map = (char*)malloc((row*col)*sizeof(char));
 	Pos mEnter(2, 0);
+	Stack<Pos> path;
 	InitMazeMap( Map, row, col);
+
 	PrintMazeMap(Map, row, col);
-	if(GetPath(Map, row, col, mEnter))
+	if(GetPath(Map, row, col, mEnter, path))
 	{
 		PrintMazeMap(Map, row, col);
 	}

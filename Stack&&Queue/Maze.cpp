@@ -1,16 +1,23 @@
 #include "Maze.h"
 #include <cassert>
-#include "Stack.h"
 
 void InitMazeMap(char* map, int row, int col)
 {
 	FILE* f1 = fopen("MazeMap.txt", "r");
 	assert(f1);
+	//跳过第一行
+	int ch = fgetc(f1);
+	while (ch != '\n')
+	{
+		ch = fgetc(f1);
+	}
+
+	//开始读取迷宫地图
 	for (int i = 0; i < row; ++i)
 	{
 		for (int j = 0; j < col;)
 		{
-			int ch = fgetc(f1);
+			ch = fgetc(f1);
 			if (ch == '0' || ch == '1')
 			{
 				map[i*col + j] = ch;
@@ -36,11 +43,9 @@ void PrintMazeMap(char* map, int row, int col)
 
 }
 
-bool GetPath(char* map, int row, int col, Pos enter)
+bool GetPath(char* map, int row, int col, Pos enter, Stack<Pos>& path)
 {
-	Stack<Pos> path;
 	map[enter._row*col + enter._col] = '2';
-
 	path.Push(enter);
 
 	while (!path.Empty())
@@ -124,3 +129,29 @@ bool IsExport(const Pos& pos, int row ,int col)
 	}
 }
 
+void GetSize(int* prow, int* pcol)
+{
+	FILE* f = fopen("MazeMap.txt", "r");
+	assert(f);
+	int ch = fgetc(f);
+
+	while (ch != '\n' && (ch <= '0' || ch >= '9'))//跳过非数字字符
+	{
+		ch = fgetc(f);
+	}
+	while (ch >= '0'&&ch <= '9') //row
+	{
+		*prow = *prow * 10 + (ch - '0');
+		ch = fgetc(f);
+	}
+	while (ch != '\n'&& (ch<='0' || ch>='9'))
+	{
+		ch = fgetc(f);
+	}
+	while (ch >= '0' && ch <= '9')//col
+	{
+		*pcol = *pcol * 10 + (ch - '0');
+		ch = fgetc(f);
+	}
+	fclose(f);
+}
