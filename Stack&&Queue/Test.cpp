@@ -31,32 +31,10 @@ void TestQueue()
 	}
 }
 
-void TestMaze()
-{
-	int row = 0;
-	int col = 0;
-	GetSize( &row, &col);
-	char* Map = (char*)malloc((row*col)*sizeof(char));
-	Pos mEnter(2, 0);
-	Stack<Pos> path;
-	InitMazeMap( Map, row, col);
-
-	PrintMazeMap(Map, row, col);
-	if(GetPath(Map, row, col, mEnter, path))
-	{
-		PrintMazeMap(Map, row, col);
-	}
-	else
-	{
-		cout << "没有通路"<<endl;
-	}
-	free(Map);
-}
 int main()
 {
 	//TestStack();
 	//TestQueue();
-	TestMaze();
 	system("pause");
 	return 0;
 }
