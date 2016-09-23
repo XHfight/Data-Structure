@@ -24,6 +24,12 @@ template <class T>
 class SparseMatrix
 {
 public:
+	SparseMatrix()
+	:_row(0)
+	 ,_col(0)
+	 ,_illegal(T())
+	{}
+
 	SparseMatrix(T* arr, size_t row, size_t col, const T& illegal)
 		:_row(row)
 		,_col(col)
@@ -44,17 +50,19 @@ public:
 
 	void Display()
 	{
-		vector<Triple<T>>::iterator it = _matrix.begin();
+
+		vector<Triple<T> >::iterator iter;
+		iter = _matrix.begin();
 		for(size_t i = 0; i<_row; ++i)
 		{
 			for(size_t j = 0; j<_col; ++j)
 			{
-				if(it!=_matrix.end()
-					&&it->_r == i
-					&&it->_c == j)
+				if(iter!=_matrix.end()
+					&&iter->_r == i
+					&&iter->_c == j)
 				{
 					cout << it->_value <<" ";
-					++it;
+					++iter;
 				}
 				else
 				{
@@ -65,8 +73,31 @@ public:
 		}
 	cout << endl;
 	}
+	
+	SparseMatrix<T> Transpose()
+	{
+		SparseMatrix tm();
+		tm._row = _col;
+		tm._col = _row;
+		tm._illegal = _illegal;
+		tm._Matrix.reserve(_Matrix.size());
+
+		for(size_t i = 0; i<_col; ++i)
+		{
+			size_t index = 0;
+			while(index < _matrix.size())
+			{
+				if(_matrix[index]._c == i)
+				{
+					Triple<T> t(_matrix[index]._r, _matrix[index]._c, _matrix[index]._value);
+					_matrix.push_back(t);
+				}
+				++index;
+			}
+		}
+	}
 protected:
-	vector<Triple<T>> _matrix;
+	vector<Triple<T> > _matrix;
 	size_t _row;
 	size_t _col;
 	T _illegal;
