@@ -36,17 +36,35 @@ void TestTranspose()
 			     {0, 0, 0, 0, 0},
 			     {1, 0, 3, 0, 5},
 			     {0, 0, 0, 0, 0},
-			     {0, 0, 0, 0, 0};
+				 {0, 0, 0, 0, 0}};
 	SparseMatrix<int> sm((int*)array,6,5,0);
 	sm.Display();
 	SparseMatrix<int> tm = sm.Transpose();
 	tm.Display();
 }
 
+void TestFastTranspose()
+{
+	int array [6][5] =     
+		        {{1, 0, 3, 0, 5},
+			     {0, 0, 0, 0, 0},
+			     {0, 0, 0, 0, 0},
+			     {1, 0, 3, 0, 5},
+			     {0, 0, 0, 0, 0},
+				 {0, 0, 0, 0, 0}};
+	SparseMatrix<int> sm((int*)array,6,5,0);
+	sm.Display();
+	SparseMatrix<int> tm = sm.FastTranspose();
+	tm.Display();
+}
+
+
 int main()
 {
 	//TestSymmetricMatrix();
-	TestSparseMatrix();
+	//TestSparseMatrix();
+	//TestTranspose();
+	TestFastTranspose();
 	system("pause");
 	return 0;
 }

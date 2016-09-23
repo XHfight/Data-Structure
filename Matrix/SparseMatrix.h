@@ -13,7 +13,7 @@ struct Triple
 	T _value;
 
 
-	Triple(size_t row, size_t col, const T& value)
+	Triple(size_t row = 0, size_t col = 0, const T& value = T())
 		:_r(row)
 		,_c(col)
 		,_value(value)
@@ -61,7 +61,7 @@ public:
 					&&iter->_r == i
 					&&iter->_c == j)
 				{
-					cout << it->_value <<" ";
+					cout << iter->_value <<" ";
 					++iter;
 				}
 				else
@@ -73,14 +73,15 @@ public:
 		}
 	cout << endl;
 	}
-	
-	SparseMatrix<T> Transpose()
+	//普通转置(行优先存储)
+	//列变行，从0列开始，将列数据一个一个放进转置矩阵
+	SparseMatrix<T> Transpose() 
 	{
-		SparseMatrix tm();
+		SparseMatrix<T> tm;
 		tm._row = _col;
 		tm._col = _row;
 		tm._illegal = _illegal;
-		tm._Matrix.reserve(_Matrix.size());
+		tm._matrix.reserve(_matrix.size());
 
 		for(size_t i = 0; i<_col; ++i)
 		{
@@ -89,12 +90,51 @@ public:
 			{
 				if(_matrix[index]._c == i)
 				{
-					Triple<T> t(_matrix[index]._r, _matrix[index]._c, _matrix[index]._value);
-					_matrix.push_back(t);
+					Triple<T> t(_matrix[index]._c, _matrix[index]._r, _matrix[index]._value);
+					tm._matrix.push_back(t);
 				}
 				++index;
 			}
 		}
+		return tm;
+	}
+
+	SparseMatrix<T> FastTranspose()
+	{
+		SparseMatrix<T> tm;
+		tm._row = _col;
+		tm._col = _row;
+		tm._illegal = _illegal;
+		tm._matrix.resize(_matrix.size());
+
+		int* count = new int[_col];//记录每行的元素个数
+		memset(count, 0, sizeof(int)*_col);
+		int* start = new int[_col];//转置矩阵中元素的位置
+		start[0] = 0;
+		
+		size_t index = 0;
+		while(index < _matrix.size())
+		{
+			count[_matrix[index]._c]++;
+			++index;		
+		}
+
+		for(size_t i=1; i<_col; ++i)
+		{
+			start[i] = start[i-1] + count[i-1]; 
+		}
+		
+		index = 0;
+		while(index < _matrix.size())
+		{
+			Triple<T> t(_matrix[index]._c, _matrix[index]._r, _matrix[index]._value);
+			tm._matrix[start[_matrix[index]._c]++] = t;   //核心代码
+			++index;
+		}
+
+		delete[] count;
+		delete[] start;
+		return tm;
 	}
 protected:
 	vector<Triple<T> > _matrix;
