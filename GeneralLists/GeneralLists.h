@@ -1,6 +1,7 @@
 #pragma once 
 #include <cassert>
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 enum NodeType
@@ -55,17 +56,38 @@ public:
 	~GeneralList()
 	{
 		Release(_head);
-		_head = NULL;
 	}
 	void Print()
 	{
 		Print(_head);
 		cout << endl;
 	}
+
+	//传统写法
+	/*
 	GeneralList& operator=(const GeneralList& g)
 	{
-		(*this).~GeneralList();
-		_head = Copy(g._head);
+		if(this != &g)
+		{
+			Node* tmp = Copy(g._head);
+			Release(_head);
+			_head = tmp;
+		}
+		return *this;
+	}
+	*/
+
+	//现代写法
+	GeneralList& operator=(const GeneralList& g)
+	{
+		if(this != &g)
+		{
+			GeneralList tmp(g);
+			//swap
+			Node* t = _head;
+			_head = tmp._head;
+			tmp._head = t;
+		}
 		return *this;
 	}
 

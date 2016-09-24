@@ -57,6 +57,10 @@ void GeneralList::Print(GeneralListNode* head)
 		else if (cur->_type == SUB)
 		{
 			Print(cur->_sub);
+			if(cur->_next != NULL)
+			{
+				cout << ",";
+			}
 		}
 		else
 		{
@@ -73,10 +77,6 @@ void GeneralList::Print(GeneralListNode* head)
 
 GeneralList::Node* GeneralList::Copy(GeneralList::Node* head)
 {
-	if (this->_head == head)
-	{
-		return _head;
-	}
 	Node* newHead = NULL;
 	Node* newCur = NULL;
 	Node* cur = head;
@@ -133,6 +133,7 @@ void GeneralList::Release(Node* head)
 			}
 		}
 	}
+	head = NULL;
 }
 
 size_t GeneralList::Count(Node* head)

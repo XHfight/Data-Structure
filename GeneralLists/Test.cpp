@@ -23,12 +23,13 @@ void TestGeneralList()
 	//«Û…Ó∂»
 	cout << "g3.depth:" << g3.Depth() << endl;
 	GeneralList g5 = "(((),()),(),(a,(b,(c,d))))";
+	g5.Print();
 	cout << "g5.depth:"<< g5.Depth() << endl;
 
 }
 int main()
 {
 	TestGeneralList();
-	system("pause");
+ //	system("pause");
 	return 0;
 }
