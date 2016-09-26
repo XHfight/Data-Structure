@@ -15,6 +15,18 @@ void TestBinaryTree()
 	t2.InOrder();
 
 	t1.PostOrder();
+	cout << "t1.PrevOrder_NonR:" << endl;
+	t1.PrevOrder_NonR();
+
+	cout << "t1.InOrder_NonR:" << endl;
+	t1.InOrder_NonR();
+	
+	cout << "t1.LevelOrder:" << endl;
+	t1.LevelOrder();
+
+	cout << "t1.GetKLevel(2):" << t1.GetKLevel(2)<< endl;
+
+
 	cout << "t1.Size():" << t1.Size() << endl;
 	cout << "t3.Size():" << t3.Size() << endl;
 

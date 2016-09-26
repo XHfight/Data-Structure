@@ -1,4 +1,6 @@
 #pragma once
+#include <stack>
+#include <queue>
 #include <iostream>
 using namespace std;
 
@@ -46,7 +48,7 @@ public:
 		}
 		return *this;
 	}
-	
+
 	void PrevOrder()
 	{
 		_PrevOrder(_root);
@@ -65,6 +67,68 @@ public:
 		cout << endl;
 	}
 
+	void LevelOrder()
+	{
+		queue<Node*> q;
+		Node* cur = _root;
+		if (cur != NULL)
+			q.push(cur);
+
+		while (!q.empty())
+		{
+			Node* f = q.front();
+			cout << f->_data << " ";
+			q.pop();
+
+			if (f->_left)
+				q.push(f->_left);
+			if (f->_right)
+				q.push(f->_right);
+		}
+		cout << endl;
+
+	}
+
+	void InOrder_NonR()
+	{
+		stack<Node*> s;
+		Node* cur = _root;
+		while (cur || !s.empty())
+		{
+			while (cur)
+			{
+				s.push(cur);
+				cur = cur->_left;
+			}
+
+			Node* t = s.top();
+			cout << t->_data << " ";
+			s.pop();
+			cur = t->_right;
+		}
+		cout << endl;
+	}
+
+	void PrevOrder_NonR()
+	{
+		stack<Node*> s;
+		Node* cur = _root;
+		while (cur || !s.empty())
+		{
+			while (cur)
+			{
+				cout << cur->_data << " ";
+				s.push(cur);
+				cur = cur->_left;
+			}
+
+			Node* t = s.top();
+			s.pop();
+			cur = t->_right;
+		}
+		cout << endl;
+	}
+
 	size_t Size()
 	{
 		return _Size(_root);
@@ -77,6 +141,11 @@ public:
 	size_t LeafSize()
 	{
 		return _LeafSize(_root);
+	}
+
+	size_t GetKLevel(int k) //计算第k层的结点的个数
+	{
+		return _GetKLevel(_root, k);
 	}
 private:
 	Node* _BinaryTree(const T* arr, size_t size, size_t& index, const T& invalid)
@@ -119,8 +188,8 @@ private:
 	{
 		if (root != NULL)
 		{
-			_PrevOrder(root->_left);
 			cout << root->_data << " ";
+			_PrevOrder(root->_left);
 			_PrevOrder(root->_right);
 		}
 	}
@@ -129,8 +198,8 @@ private:
 	{
 		if (root != NULL)
 		{
-			cout << root->_data << " ";
 			_InOrder(root->_left);
+			cout << root->_data << " ";
 			_InOrder(root->_right);
 		}
 	}
@@ -144,6 +213,7 @@ private:
 			cout << root->_data << " ";
 		}
 	}
+
 
 	size_t _Size(Node* root)
 	{
@@ -166,11 +236,11 @@ private:
 		}
 		return dep;
 	}
-	
+
 	size_t _LeafSize(Node* root)
 	{
 		size_t ls = 0;
-		if (root != NULL )
+		if (root != NULL)
 		{
 			if (root->_left == NULL && root->_right == NULL)
 				ls = 1;
@@ -179,8 +249,22 @@ private:
 
 		}
 		return ls;
+	}
 
-
+	size_t _GetKLevel(Node* root, int k)
+	{
+		if (root == NULL || k < 0)
+		{
+			return 0;
+		}
+		else if (k == 0) //根节点为第0层
+		{
+			return 1;
+		}
+		else
+		{
+			return _GetKLevel(root->_left, k - 1) + _GetKLevel(root->_right, k - 1);
+		}
 	}
 protected:
 	Node* _root;
