@@ -15,6 +15,9 @@ void TestBinaryTree()
 	t2.InOrder();
 
 	t1.PostOrder();
+	cout << "t1.PostOrder_NonR:" << endl;
+	t1.PostOrder_NonR();
+
 	cout << "t1.PrevOrder_NonR:" << endl;
 	t1.PrevOrder_NonR();
 
@@ -30,7 +33,7 @@ void TestBinaryTree()
 	cout << "t1.Size():" << t1.Size() << endl;
 	cout << "t3.Size():" << t3.Size() << endl;
 
-	cout << "t1.Depth():" << t1.Depth() << endl;
+		cout << "t1.Depth():" << t1.Depth() << endl;
 	cout << "t3.Depth():" << t3.Depth() << endl;
 
 	cout << "t1.LeafSize():" << t1.LeafSize() << endl;

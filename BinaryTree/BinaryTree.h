@@ -129,6 +129,33 @@ public:
 		cout << endl;
 	}
 
+	void PostOrder_NonR()
+	{
+		stack<Node*> s;
+		Node* cur = _root;
+		Node* prevVisited = NULL;
+
+		while (cur || !s.empty())
+		{
+			while (cur)
+			{
+				s.push(cur);
+				cur = cur->_left;
+			}
+			
+			Node* t = s.top();
+
+			if (t->_right == NULL || t->_right == prevVisited)
+			{
+				cout << t->_data << " ";
+				prevVisited = t;
+				s.pop();
+			}
+			else
+				cur = t->_right;
+		}
+		cout << endl;
+	}
 	size_t Size()
 	{
 		return _Size(_root);
