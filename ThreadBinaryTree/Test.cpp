@@ -7,10 +7,10 @@ void TestPrevThread()
 	BinaryTree_Thr<int> t(arr, sizeof(arr)/sizeof(arr[0]), '#');
 	BinaryTree_Thr<int> t2(arr2, sizeof(arr2)/sizeof(arr2[0]), '#');
 
-	t.PrevThread();
+	t.PrevOrderThreading();
 	t.PrevOrder();
 
-	t2.PrevThread();
+	t2.PrevOrderThreading();
 	t2.PrevOrder();
 }
 
@@ -23,10 +23,10 @@ void TestInThread()
 	BinaryTree_Thr<int> t2(arr2, sizeof(arr2)/sizeof(arr2[0]), '#');
 
 
-	t.InThread();
+	t.InOrderThreading();
 	t.InOrder();
 
-	t2.InThread();
+	t2.InOrderThreading();
 	t2.InOrder();
 }
 
@@ -34,9 +34,10 @@ void TestPostThread()
 {
 	int arr[10] = {1, 2, 3,'#','#', 4,'#','#', 5, 6};
 	BinaryTree_Thr<int> t(arr, sizeof(arr)/sizeof(arr[0]), '#');
-	t.PostThread();	
+	t.PostOrderThreading();	
 	//t.PostOrder();
 }
+
 int main()
 {
 	//TestPrevThread();

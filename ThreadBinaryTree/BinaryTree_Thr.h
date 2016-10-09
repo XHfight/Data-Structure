@@ -40,7 +40,16 @@ public:
 		size_t index = 0;
 		_root = _CreateTree(arr, size, index, invalid);
 	}
-	void PrevThread()
+
+	//递归版
+	void PrevOrderThreading()
+	{
+		Node* prev = NULL;
+		_PrevOrderThreading(_root, prev);
+	}
+
+	//非递归版
+	/*void PrevOrderThreading()
 	{
 		stack<Node*> s;
 		Node* cur = _root;
@@ -78,92 +87,111 @@ public:
 				cur = t->_right;
 		}
 		prevNode->_rightTag = THREAD;
-	}
+	}*/
 
-	void InThread()
+	//递归版
+	void InOrderThreading()
 	{
-		stack<Node*> s;
-		Node* cur = _root;
 		Node* prev = NULL;
-		while(cur || !s.empty())
-		{
-			while(cur)
-			{
-				s.push(cur);
-				cur = cur->_left;
-			}
-			
-			Node* t = s.top();
-			s.pop();
-			
-			//线索化 左
-			if(t->_left == NULL && t->_leftTag == LINK)
-			{
-				t->_left = prev;
-				t->_leftTag = THREAD;
-			}
-			//线索化 右
-			if(prev && prev->_right == NULL && prev->_rightTag == LINK)
-			{
-				prev->_right = t;
-				prev->_rightTag = THREAD;
-			}
-
-			prev = t;
-
-			cur = t->_right;
-		}
-		prev->_rightTag = THREAD;
+		_InOrderThreading(_root, prev);
 	}
 	
-	void PostThread()
+	//非递归版
+	//void InOrderThreading()
+	//{
+	//	stack<Node*> s;
+	//	Node* cur = _root;
+	//	Node* prev = NULL;
+	//	while(cur || !s.empty())
+	//	{
+	//		while(cur)
+	//		{
+	//			s.push(cur);
+	//			cur = cur->_left;
+	//		}
+	//		
+	//		Node* t = s.top();
+	//		s.pop();
+	//		
+	//		//线索化 左
+	//		if(t->_left == NULL && t->_leftTag == LINK)
+	//		{
+	//			t->_left = prev;
+	//			t->_leftTag = THREAD;
+	//		}
+	//		//线索化 右
+	//		if(prev && prev->_right == NULL && prev->_rightTag == LINK)
+	//		{
+	//			prev->_right = t;
+	//			prev->_rightTag = THREAD;
+	//		}
+
+	//		prev = t;
+
+	//		cur = t->_right;
+	//	}
+	//	prev->_rightTag = THREAD;
+	//}
+	
+	//递归版
+	void PostOrderThreading()
 	{
-		Node* prevVisited = NULL;
-		Node* cur = _root;
-		stack<Node*> s;
-
-		while(cur || !s.empty())
-		{
-			while(cur)
-			{
-				s.push(cur);
-				cur = cur->_left;
-			}
-
-			Node* t = s.top();
-
-			if(t->_right == NULL || prevVisited == t->_right)
-			{
-				if(t->_left == NULL)
-				{
-					t->_left = prevVisited;
-					t->_leftTag = THREAD;
-				}
-				if(prevVisited && prevVisited->_right == NULL)
-				{
-					prevVisited->_right = t;
-					prevVisited->_rightTag = THREAD;
-				}
-				s.pop(); // 注意:访问过后才可以pop
-				prevVisited = t;
-			}
-			else
-			{
-				cur = t->_right;
-			}
-		}
+		Node* prev = NULL;
+		_PostOrderThreading(_root, prev);
 	}
+
+	//非递归版
+	//void PostOrderThreading()
+	//{
+	//	Node* prevVisited = NULL;
+	//	Node* cur = _root;
+	//	stack<Node*> s;
+
+	//	while(cur || !s.empty())
+	//	{
+	//		while(cur)
+	//		{
+	//			s.push(cur);
+	//			cur = cur->_left;
+	//		}
+
+	//		Node* t = s.top();
+
+	//		if(t->_right == NULL || prevVisited == t->_right)
+	//		{
+	//			if(t->_left == NULL)
+	//			{
+	//				t->_left = prevVisited;
+	//				t->_leftTag = THREAD;
+	//			}
+	//			if(prevVisited && prevVisited->_right == NULL)
+	//			{
+	//				prevVisited->_right = t;
+	//				prevVisited->_rightTag = THREAD;
+	//			}
+	//			s.pop(); // 注意:访问过后才可以pop
+	//			prevVisited = t;
+	//		}
+	//		else
+	//		{
+	//			cur = t->_right;
+	//		}
+	//	}
+	//}
 
 	void PrevOrder()
 	{
 		Node* cur = _root;
 		while(cur)
 		{
-			cout << cur->_data << " ";
-			if(cur->_leftTag == LINK)
+			while(cur->_leftTag == LINK)
+			{
+				cout << cur->_data << " ";
 				cur = cur->_left;
-			else
-				cur = cur->_right;
+			}
+			cout << cur->_data << " ";
+
+			cur = cur->_right;
 		}
 		cout << endl;
 	}
@@ -171,17 +199,20 @@ public:
 	void InOrder()
 	{
 		Node* cur = _root;
-		Node* prevVisited = NULL;
 		while(cur)
 		{
-			//注意：当通过THREAD找到下一个节点时，不需要找最左，因为之前已经找过。
-			if((prevVisited==NULL) || (prevVisited && prevVisited->_rightTag == LINK))
+			while(cur->_leftTag == LINK)
 			{
-				while(cur->_leftTag == LINK)
-					cur = cur->_left;
+				cur = cur->_left;
 			}
 			cout << cur->_data << " ";
-			prevVisited = cur;
+			
+			while(cur && cur->_rightTag == THREAD)
+			{
+				cur = cur->_right;
+				if(cur)
+					cout << cur->_data << " ";
+			}
 			cur = cur->_right;
 		}
 		cout << endl;
@@ -191,6 +222,73 @@ public:
 	void PostOrder();
 
 protected:
+	void _PrevOrderThreading(Node* cur, Node*& prev)
+	{
+		if(cur == NULL)
+			return;
+		if(cur->_left == NULL)
+		{
+			cur->_leftTag = THREAD;
+			cur->_left = prev;
+		}
+
+		if(prev && prev->_right == NULL)
+		{
+			prev->_rightTag = THREAD;
+			prev->_right = cur;
+		}
+
+		prev = cur;
+
+		if(cur->_leftTag == LINK) //注意
+			_PrevOrderThreading(cur->_left, prev);
+		if(cur->_rightTag == LINK)	
+			_PrevOrderThreading(cur->_right, prev);
+	}
+
+	void _InOrderThreading(Node* cur, Node*& prev)
+	{
+		if(cur == NULL)
+			return;
+
+		_InOrderThreading(cur->_left, prev);
+		if(cur->_left == NULL)
+		{
+			cur->_leftTag = THREAD;
+			cur->_left = prev;
+		}
+
+		if(prev && prev->_right == NULL)
+		{
+			prev->_rightTag = THREAD;
+			prev->_right = cur;
+		}
+		prev = cur;
+
+		_InOrderThreading(cur->_right, prev);
+	}
+
+	void _PostOrderThreading(Node* cur, Node*& prev)
+	{
+		if(cur == NULL)
+			return;
+
+		_PostOrderThreading(cur->_left, prev);
+		_PostOrderThreading(cur->_right, prev);
+
+		if(cur->_left == NULL)
+		{
+			cur->_leftTag = THREAD;
+			cur->_left = prev;
+		}
+		if(prev && prev->_right == NULL)
+		{
+			prev->_rightTag = THREAD;
+			prev->_right = cur;
+		}
+		prev = cur;
+	}
+
 	Node* _CreateTree(T* arr, size_t size, size_t& index, const T& invalid)
 	{
 		Node* root = NULL;
