@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <cassert>
 using namespace std;
 
 enum PointerTag
@@ -27,51 +28,90 @@ struct BinaryTreeThreadNode
 
 };
 
-template<class T>
+template<class T, class Ref, class Ptr>
 struct __BinaryTreeThreadIterator
 {
 	typedef BinaryTreeThreadNode<T> Node;
-	typedef __BinaryTreeThreadIterator Iterator;
+	typedef __BinaryTreeThreadIterator<T, Ref, Ptr> Self;
+	Node* _node;
 
-	Node* node;
+	__BinaryTreeThreadIterator()
+		:_node(NULL)
+	{}
 
-	Iterator& operator++()
+	__BinaryTreeThreadIterator(Node* node)
+		:_node(node)
+	{}
+
+	Self& operator++()
 	{
-		if(node->_rightTag == THREAD)
+		assert(_node);
+		if(_node->_rightTag == THREAD)
 		{
-			node = node->_right;
+			_node = _node->_right;
 		}
 		else
 		{
-			node = node->_right;
-			while(node->_leftTag == LINK)
+			_node = _node->_right;
+			while(_node->_leftTag == LINK)
 			{
-				node = node->_left;
+				_node = _node->_left;
 			}
 		}
 		return *this;
 	}
 
-	T& operator*()	const
+	Self operator++(int)
 	{
-		return node->_data;
+		Self tmp(*this);
+		++(*this);
+		return tmp;
 	}
 
-	bool operator!=(const Iterator& it)
+	Self& operator--()
 	{
-		if(node != it.node)
-			return true;
+		assert(_node);
+		if(_node->_leftTag == LINK)
+		{
+			_node = _node->_left;
+			while(_node->_rightTag == LINK)
+			{
+				_node = _node->_right;
+			}
+		}
 		else
-			return false;
+		{
+			_node = _node->_left;
+		}
+	}
+
+	Self operator--(int)
+	{
+		Self tmp(*this);
+		--(*this);
+		return tmp;
+	}
+
+	Ref operator*()	const
+	{
+		assert(_node);
+		return _node->_data;
+	}
+
+	bool operator!=(const Self& it) const
+	{
+		return (_node != it._node);
 	}
 };
 
-template <class T>
+template <class T, class Ref, class Ptr>
 class BinaryTreeThread
 {
 	typedef BinaryTreeThreadNode<T> Node;
 public:
-	typedef __BinaryTreeThreadIterator<T> Iterator;
+	typedef __BinaryTreeThreadIterator<T, T&, T*> Iterator;
+	typedef __BinaryTreeThreadIterator<T, const T&, const T*> ConstIterator;
+
 
 public:
 	BinaryTreeThread(T* arr, size_t size, const T& invalue)
@@ -86,23 +126,35 @@ public:
 		_InOrderThreading(_root, prev);
 		prev->_rightTag = THREAD;
 	}
+
 	Iterator Begin()
 	{
-		Iterator it;
 		Node* cur = _root;
 		while(cur->_leftTag == LINK)
 		{
 			cur = cur->_left;
 		}
-		it.node = cur;
-		return it;
+		return cur;
 	}
 
 	Iterator End()
 	{
-		Iterator it;
-		it.node = NULL;
-		return it;
+		return (Node*)NULL;
+	}
+
+	ConstIterator Begin() const
+	{
+		Node* cur = _root;
+		while(cur->_leftTag == LINK)
+		{
+			cur = cur->_left;
+		}
+		return cur;
+	}
+
+	ConstIterator End() const
+	{
+		return (Node*)NULL;
 	}
 protected:
 	Node* _CreatTree(T* arr, size_t size, size_t& index, const T& invalue)
