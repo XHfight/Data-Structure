@@ -39,12 +39,12 @@ public:
 		}
 
 	}
-	
+
 	void Push(const T& data)
 	{
 		_heap.push_back(data);
 		size_t size = _heap.size();
-       //向上调整
+		//向上调整
 		_AdjustUp(size-1);
 	}
 
@@ -100,7 +100,7 @@ protected:
 			}
 			else
 				break;
-			
+
 			child = parent;
 		}
 	}
@@ -108,3 +108,48 @@ protected:
 	vector<T> _heap;
 };
 
+
+template<class T>
+void AdjustDown(T* a, size_t size, size_t root)
+{
+	size_t parent = root;
+	size_t child = root*2+1;
+
+	while(child < size)
+
+	{
+		if(child+1<size && a[child+1]<a[child])
+		{
+			child++;
+		}
+		if(a[child] < a[parent])
+		{
+			swap(a[child], a[parent]);
+			parent = child;
+			child = parent*2+1;
+		}
+		else
+			break;
+	}
+
+}
+//降序 --》小堆
+//时间复杂度：N*LgN
+template<class T>
+void HeapSort(T* arr, size_t size)
+{
+	//建堆
+	for(int i = (size-2)/2; i>=0; --i)
+	{
+		AdjustDown(arr, size, i);	
+	}
+	
+	//排序
+	int index = size-1;  //index:记录当前排序的结点
+	while(index)
+	{ 
+		swap(arr[0], arr[index]);
+		AdjustDown(arr, --index, 0);
+	}
+
+}
