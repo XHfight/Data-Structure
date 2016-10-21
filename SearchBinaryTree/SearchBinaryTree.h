@@ -9,30 +9,32 @@
 #include <iostream>
 using namespace std;
 
-template <class K>
+template <class K, class V>
 struct SearchBinaryTreeNode
 {
 	K _key; // 关键字（唯一）
+	V _value;
 	SearchBinaryTreeNode<K>* _left;
 	SearchBinaryTreeNode<K>* _right;
 
 	SearchBinaryTreeNode(const K& key)
 		:_key(key)
+		 ,_value(V())
 		 ,_left(NULL)
 		 ,_right(NULL)
 	{}
 };
 
-template <class K>
+template <class K, class V>
 class SearchBinaryTree
 {
-	typedef SearchBinaryTreeNode<K> Node;
+	typedef SearchBinaryTreeNode<K, V> Node;
 public:
 	SearchBinaryTree()
 		:_root(NULL)
 	{}
 	
-	SearchBinaryTree(const SearchBinaryTree<K>& sTree)
+	SearchBinaryTree(const SearchBinaryTree<K,V>& sTree)
 	{
 		_root = _CopyTree(sTree._root);
 	}

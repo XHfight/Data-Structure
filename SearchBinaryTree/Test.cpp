@@ -12,7 +12,7 @@ using namespace std;
 void TestSearchBinaryTree()
 {
 	int arr[] = {5, 3, 4, 1, 7, 8, 2, 6, 0, 9};
-	SearchBinaryTree<int> h1;
+	SearchBinaryTree<int, int> h1;
 	for(int i = 0; i<sizeof(arr)/sizeof(arr[0]); ++i)
 	{
 		h1.Insert(arr[i]);
@@ -39,7 +39,7 @@ void TestSearchBinaryTree()
 void TestSearchBinaryTreeR()
 {
 	int arr[] = {5, 3, 4, 1, 7, 8, 2, 6, 0, 9};
-	SearchBinaryTree<int> h1;
+	SearchBinaryTree<int, int> h1;
 	for(int i = 0; i<sizeof(arr)/sizeof(arr[0]); ++i)
 	{
 		h1.InsertR(arr[i]);
