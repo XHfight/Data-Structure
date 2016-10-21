@@ -23,12 +23,48 @@ void TestSearchBinaryTree()
 
 	h1.Remove(5);
 	h1.InOrder();
+
+	h1.Remove(1);
+	h1.Remove(2);
+	h1.Remove(3);
+	h1.Remove(4);
+	h1.Remove(5);
+	h1.Remove(6);
+	h1.Remove(7);
+	h1.Remove(8);
 	h1.Remove(9);
+	h1.Remove(0);
+	h1.InOrder();
+}
+void TestSearchBinaryTreeR()
+{
+	int arr[] = {5, 3, 4, 1, 7, 8, 2, 6, 0, 9};
+	SearchBinaryTree<int> h1;
+	for(int i = 0; i<sizeof(arr)/sizeof(arr[0]); ++i)
+	{
+		h1.InsertR(arr[i]);
+	}
+	h1.InOrder();
+
+	h1.RemoveR(5);
+	h1.InOrder();
+
+	h1.RemoveR(1);
+	h1.RemoveR(2);
+	h1.RemoveR(3);
+	h1.RemoveR(4);
+	h1.RemoveR(5);
+	h1.RemoveR(6);
+	h1.RemoveR(7);
+	h1.RemoveR(8);
+	h1.RemoveR(9);
+	h1.RemoveR(0);
 	h1.InOrder();
 
 }
 int main()
 {
 	TestSearchBinaryTree();
+	TestSearchBinaryTreeR();
 	return 0;
 }
