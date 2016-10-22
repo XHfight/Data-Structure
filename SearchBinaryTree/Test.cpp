@@ -18,7 +18,7 @@ void TestSearchBinaryTree()
 		h1.Insert(arr[i]);
 	}
 	h1.InOrder();
-	SearchBinaryTree<int> h2(h1);
+	SearchBinaryTree<int, int> h2(h1);
 	h2.InOrder();
 
 	h1.Remove(5);

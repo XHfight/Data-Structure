@@ -12,10 +12,10 @@ using namespace std;
 template <class K, class V>
 struct SearchBinaryTreeNode
 {
-	K _key; // å…³é”®å­—ï¼ˆå”¯ä¸€ï¼‰
+	K _key; // ¹Ø¼ü×Ö£¨Î¨Ò»£©
 	V _value;
-	SearchBinaryTreeNode<K>* _left;
-	SearchBinaryTreeNode<K>* _right;
+	SearchBinaryTreeNode<K, V>* _left;
+	SearchBinaryTreeNode<K, V>* _right;
 
 	SearchBinaryTreeNode(const K& key)
 		:_key(key)
@@ -81,7 +81,7 @@ public:
 		cout << endl;
 	}
 
-    //keyä¸æ”¯æŒä¿®æ”¹
+    //key²»Ö§³ÖÐÞ¸Ä
 	bool Find(const K& key)
 	{
 		Node* cur = _root;
@@ -115,11 +115,11 @@ public:
 			}
 			else
 			{
-				//åˆ é™¤cur
+				//É¾³ýcur
 				Node* del  = cur;
 				if(cur->_left == NULL)
 				{
-					if(cur == _root) //åˆ é™¤çš„ç»“ç‚¹ä¸ºæ ¹ç»“ç‚¹ï¼Œä¸”å·¦ä¸ºç©ºï¼ˆå¦‚æžœä¸åˆ¤æ–­ï¼Œparentä¸ºNULLï¼Œä¼šå‡ºé”™ï¼‰
+					if(cur == _root) //É¾³ýµÄ½áµãÎª¸ù½áµã£¬ÇÒ×óÎª¿Õ£¨Èç¹û²»ÅÐ¶Ï£¬parentÎªNULL£¬»á³ö´í£©
 						_root = cur->_right;
 					else
 					{
@@ -143,9 +143,9 @@ public:
 				}
 				else
 				{
-					//æ€è·¯ï¼šæ‰¾å³æ ‘çš„æœ€å·¦ç»“ç‚¹æˆ–å·¦æ ‘çš„æœ€å³ç»“ç‚¹ï¼Œä¸Žcuräº¤æ¢ï¼Œç„¶åŽåˆ é™¤æœ€å³æˆ–æœ€å·¦ç»“ç‚¹
+					//Ë¼Â·£ºÕÒÓÒÊ÷µÄ×î×ó½áµã»ò×óÊ÷µÄ×îÓÒ½áµã£¬Óëcur½»»»£¬È»ºóÉ¾³ý×îÓÒ»ò×î×ó½áµã
 					parent = cur;
-					Node* minR = cur->_right; //å³æ ‘çš„æœ€å·¦èŠ‚ç‚¹
+					Node* minR = cur->_right; //ÓÒÊ÷µÄ×î×ó½Úµã
 					while(minR->_left != NULL)
 					{
 						parent = minR;
@@ -232,7 +232,7 @@ protected:
 			return _FindR(key->_right, key);
 		}
 	}
-	bool _InsertR(Node*& root, const K& key) //æ³¨æ„ï¼šå·§ç”¨å¼•ç”¨ä½¿èŠ‚ç‚¹è¿žæŽ¥èµ·æ¥
+	bool _InsertR(Node*& root, const K& key) //×¢Òâ£ºÇÉÓÃÒýÓÃÊ¹½ÚµãÁ¬½ÓÆðÀ´
 	{
 		if(root == NULL)
 		{
@@ -259,11 +259,11 @@ protected:
 			return _RemoveR(root->_right, key);
 		else
 		{
-			//åˆ é™¤
+			//É¾³ý
 			Node* del = root;
-			if(root->_left == NULL) //åˆ é™¤å·¦ä¸ºç©ºç»“ç‚¹
+			if(root->_left == NULL) //É¾³ý×óÎª¿Õ½áµã
 				root = root->_right;
-			else if(root->_right == NULL)//åˆ é™¤å³ä¸ºç©ºç»“ç‚¹
+			else if(root->_right == NULL)//É¾³ýÓÒÎª¿Õ½áµã
 				root = root->_left;
 			else
 			{
