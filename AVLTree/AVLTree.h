@@ -17,7 +17,7 @@ struct AVLTreeNode
 	AVLTreeNode<K, V>* _left;
 	AVLTreeNode<K, V>* _right;
 	AVLTreeNode<K, V>* _parent;
-	int _ba; //å¹³è¡¡å› å­
+	int _ba; //Æ½ºâÒò×Ó
 
 	AVLTreeNode(const K& key, const V& value)
 		:_key(key)
@@ -46,7 +46,7 @@ public:
 			return true;
 		}
 		
-		//æŸ¥æ‰¾æ’å…¥ä½ç½®
+		//²éÕÒ²åÈëÎ»ÖÃ
 		Node* parent = NULL; 
 		Node* cur = _root;
 		while(cur)
@@ -65,88 +65,88 @@ public:
 				return false;
 		}
 		
-		//æ’å…¥
+		//²åÈë
 		cur = new Node(key, value);
-		if(parent->_key > key) //parentçš„å·¦æ’å…¥
+		if(parent->_key > key) //parentµÄ×ó²åÈë
 		{
 			parent->_left = cur;
 			cur->_parent = parent;
-			//æ”¹å¹³è¡¡å› å­
+			//¸ÄÆ½ºâÒò×Ó
 			--parent->_ba;
 
-			//æ£€æŸ¥å¹³è¡¡å› å­
+			//¼ì²éÆ½ºâÒò×Ó
 			while(parent)
 			{
-				if(parent->_ba == 0)//å¹³è¡¡å› å­ä¸º0ï¼Œåœæ­¢
+				if(parent->_ba == 0)//Æ½ºâÒò×ÓÎª0£¬Í£Ö¹
 					break;
-				else if(parent->_ba == 1 ||parent->_ba == -1)//å¹³è¡¡å› å­ä¸º1/-1ï¼Œç»§ç»­å‘çˆ¶ç»“ç‚¹è°ƒæ•´
+				else if(parent->_ba == 1 ||parent->_ba == -1)//Æ½ºâÒò×ÓÎª1/-1£¬¼ÌÐøÏò¸¸½áµãµ÷Õû
 				{
 					parent = parent->_parent;
 					if(parent)
 						--parent->_ba;
 				}
-				else//å¹³è¡¡å› å­ä¸º2/-2ï¼Œæ—‹è½¬
+				else//Æ½ºâÒò×ÓÎª2/-2£¬Ðý×ª
 				{
 					if(parent->_ba==2 && parent->_right->_ba==1)
 					{
-						//å·¦æ—‹
+						//×óÐý
 						_RotateL(parent);
 					}
 					else if(parent->_ba==2 && parent->_right->_ba==-1)
 					{
-						//å³å·¦åŒæ—‹
+						//ÓÒ×óË«Ðý
 						_RotateRL(parent);
 					}
 					else if(parent->_ba==-2 && parent->_left->_ba==-1)
 					{
-						//å³æ—‹
+						//ÓÒÐý
 						_RotateR(parent);
 					}
 					else //parent->_ba==-2 && parent->_left->_ba==1
 					{
-						//å·¦å³åŒæ—‹
+						//×óÓÒË«Ðý
 						_RotateLR(parent);
 					}
 					break;
 				}	
 			}
 		}
-		else	//parentçš„å³æ’å…¥
+		else	//parentµÄÓÒ²åÈë
 		{
 			parent->_right = cur;
 			cur->_parent = parent;
 			++parent->_ba;
-			//æ£€æŸ¥å¹³è¡¡å› å­
+			//¼ì²éÆ½ºâÒò×Ó
 			while(parent)
 			{
-				if(parent->_ba == 0)//å¹³è¡¡å› å­ä¸º0ï¼Œåœæ­¢
+				if(parent->_ba == 0)//Æ½ºâÒò×ÓÎª0£¬Í£Ö¹
 					break;
-				else if(parent->_ba == 1 ||parent->_ba == -1)//å¹³è¡¡å› å­ä¸º1/-1ï¼Œç»§ç»­å‘çˆ¶ç»“ç‚¹è°ƒæ•´
+				else if(parent->_ba == 1 ||parent->_ba == -1)//Æ½ºâÒò×ÓÎª1/-1£¬¼ÌÐøÏò¸¸½áµãµ÷Õû
 				{
 					parent = parent->_parent;
 					if(parent)
 						++parent->_ba;
 				}
-				else//å¹³è¡¡å› å­ä¸º2/-2ï¼Œæ—‹è½¬
+				else//Æ½ºâÒò×ÓÎª2/-2£¬Ðý×ª
 				{
 					if(parent->_ba==2 && parent->_right->_ba==1)
 					{
-						//å·¦æ—‹
+						//×óÐý
 						_RotateL(parent);
 					}
 					else if(parent->_ba==2 && parent->_right->_ba==-1)
 					{
-						//å³å·¦åŒæ—‹
+						//ÓÒ×óË«Ðý
 						_RotateRL(parent);
 					}
 					else if(parent->_ba==-2 && parent->_left->_ba==-1)
 					{
-						//å³æ—‹
+						//ÓÒÐý
 						_RotateR(parent);
 					}
 					else
 					{
-						//å·¦å³åŒæ—‹
+						//×óÓÒË«Ðý
 						_RotateLR(parent);
 					}
 					break;
@@ -177,17 +177,18 @@ protected:
 		delete root;
 		root = NULL;
 	}
-	//å³æ—‹
+	//ÓÒÐý
 	void _RotateR(Node* parent)
 	{
 		Node* subL = parent->_left;
 		Node* subLR = subL->_right;
 
-		//subLR å’Œ parent
+		//subLR ºÍ parent
 		parent->_left = subLR;
-		subLR->_parent = parent;
+		if(subLR) //×¢Òâ£ºÓÐ¿ÉÄÜÎª¿Õ
+			subLR->_parent = parent;
 
-		//subL å’Œ pp
+		//subL ºÍ pp
 		Node* pp = parent->_parent;
 		subL->_parent = pp;
 		if(pp)
@@ -203,11 +204,11 @@ protected:
 			subL->_parent = NULL;
 		}
 
-		//subL å’Œ parent
+		//subL ºÍ parent
 		subL->_right = parent;
 		parent->_parent = subL;
 
-		//æ”¹å¹³è¡¡å› å­
+		//¸ÄÆ½ºâÒò×Ó
 		subL->_ba = parent->_ba = 0;
 	}
 	void _RotateL(Node* parent)
@@ -215,11 +216,12 @@ protected:
 		Node* subR = parent->_right;
 		Node* subRL = subR->_left;
 
-		//subRL å’Œ parent
+		//subRL ºÍ parent
 		parent->_right = subRL;
-		subRL->_parent = parent;
+		if(subRL) //×¢Òâ£ºÓÐ¿ÉÄÜÎª¿Õ
+			subRL->_parent = parent;
 
-		//pp å’Œ subR
+		//pp ºÍ subR
 		Node* pp = parent->_parent;
 		subR->_parent = pp;
 		if(pp)
@@ -234,11 +236,11 @@ protected:
 			_root = subR;
 			subR->_parent = NULL;
 		}
-		//parent å’Œ subR
+		//parent ºÍ subR
 		subR->_left = parent;
 		parent->_parent = subR;
 
-		//æ”¹å¹³è¡¡å› å­
+		//¸ÄÆ½ºâÒò×Ó
 		subR->_ba = parent->_ba = 0;
 	}
 
