@@ -67,6 +67,7 @@ public:
 
 		//²åÈë
 		cur = new Node(key, value);
+
 		if(parent->_key > key) //parentµÄ×ó²åÈë
 		{
 			parent->_left = cur;
@@ -327,14 +328,13 @@ protected:
 		size_t leftHeight = 0;
 		size_t rightHeight = 0;
 
-		if(_IsBalance(root->_left, leftHeight))
-			return true;
-		if(_IsBalance(root->_right, rightHeight))
-			return true;
-
-		height = leftHeight>rightHeight?(leftHeight+1):(rightHeight+1);
-
-		return abs(leftHeight-rightHeight)<2;
+		if(_IsBalance(root->_left, leftHeight) && _IsBalance(root->_right, rightHeight))
+		{
+			height = leftHeight>rightHeight?(leftHeight+1):(rightHeight+1);
+			return abs(leftHeight-rightHeight)<2;
+		}
+		else
+			return false;
 	}
 protected:
 	Node* _root;
