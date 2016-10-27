@@ -92,11 +92,16 @@ public:
 		cout << endl;
 	}
 	
-	bool IsBalance()
+	/*bool IsBalance()
 	{
 		return _IsBalance(_root);
-	}
+	}*/
 
+	bool IsBalance()
+	{
+		size_t height = 0;
+		return _IsBalance(_root, height);
+	}
 	~AVLTree()
 	{
 		_Release(_root);
@@ -296,19 +301,40 @@ protected:
 		return (LHeight>RHeight) ? (LHeight+1) : (RHeight+1);
 	}
 
-	bool _IsBalance(Node* root)
+	//bool _IsBalance(Node* root)
+	//{
+	//	if(root == NULL)
+	//		return true;
+
+	//	int bf = _Height(root->_right)-_Height(root->_left);
+	//	if(bf != root->_bf)
+	//		cout << "平衡因子异常 key:"<<root->_key<< endl;
+
+	//	if(abs(bf) < 2)
+	//		return _IsBalance(root->_left) && _IsBalance(root->_right);
+	//	else
+	//		return false;
+	//}
+
+	//优化
+	bool _IsBalance(Node* root, size_t& height)
 	{
 		if(root == NULL)
+		{
+			return true;
+		}
+
+		size_t leftHeight = 0;
+		size_t rightHeight = 0;
+
+		if(_IsBalance(root->_left, leftHeight))
+			return true;
+		if(_IsBalance(root->_right, rightHeight))
 			return true;
 
-		int bf = _Height(root->_right)-_Height(root->_left);
-		if(bf != root->_bf)
-			cout << "平衡因子异常 key:"<<root->_key<< endl;
+		height = leftHeight>rightHeight?(leftHeight+1):(rightHeight+1);
 
-		if(abs(bf) < 2)
-			return _IsBalance(root->_left) && _IsBalance(root->_right);
-		else
-			return false;
+		return abs(leftHeight-rightHeight)<2;
 	}
 protected:
 	Node* _root;
