@@ -5,6 +5,7 @@
 	> Created Time: Wed 02 Nov 2016 07:07:13 PM CST
  ************************************************************************/
 
+//处理哈希冲突 闭散列法(开放定址法)->二次探测
 #pragma once
 #include<iostream>
 #include<string>
