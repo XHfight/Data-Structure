@@ -21,6 +21,10 @@ void TestHash()
 	cout<<"89?" << hs.Find(89) << endl;
 	cout<<"58?" << hs.Find(58) << endl;
 	cout<<"7?" << hs.Find(7) << endl;
+
+	hs.Print();
+	//hs.Remove(9);
+	//hs.Print();
 }
 int main()
 {

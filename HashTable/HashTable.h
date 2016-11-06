@@ -37,6 +37,7 @@ class HashTable
 	typedef HashNode<K, V> Node;
 public:
 	HashTable()
+		:_size(0)
 	{
 		_table.resize(_GetPrimeSize(0));
 	}
@@ -68,6 +69,14 @@ public:
 		int i = 0;
 		size_t begin = index;//记录起点的
 		
+		/*
+		 *while循环不会死循环：
+		 *1.当找的位置为空，跳出；
+		 *2.当走回起点，跳出；
+		 *如果条件1一直不能满足，那2必然可以满足。index增长函数：index = index + i^2; 只要满足(index + i^2）% size = index就满足条件2，
+		 *上式即：C*size + index = index + i^2;(c为常数) --> C*size = i^2;当条件1不能满足时，极端情况下，i=size，C*size = size^2必然成立。
+		 *所以条件2满足，while不会死循环。
+		 * */
 		while(_table[index]._sta != EMPTY)
 		{
 			if(_table[index]._sta==EXIST && _table[index]._key==key)
@@ -76,6 +85,7 @@ public:
 			{
 				++i;
 				index = (index+ (i*i))%_table.size();
+				
 				if(index == begin) //走回起点；
 					break;
 			}
@@ -83,6 +93,30 @@ public:
 
 		return NULL;
 
+	}
+
+	bool Remove(const K& key)
+	{
+		Node* del = Find(key);
+		if(del)
+		{
+			del->_sta = DELETE;
+		}
+		--_size;
+		return false;
+	}
+
+	void Print()
+	{
+		int size = _table.size();
+		for(int i = 0; i<size; ++i)
+		{
+			if(_table[i]._sta == EXIST)
+				cout << i <<":" << _table[i]._key << " ";
+			else
+				cout << i << ":NULL ";
+		}
+		cout << endl;
 	}
 protected:
 	size_t _HashFunc(const K& key)
