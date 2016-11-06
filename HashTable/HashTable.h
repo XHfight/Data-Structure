@@ -7,6 +7,7 @@
 
 #pragma once
 #include<iostream>
+#include<string>
 #include<vector>
 using namespace std;
 
@@ -15,6 +16,36 @@ enum Status
 	EMPTY,
 	EXIST,
 	DELETE,
+};
+template<class K>
+struct __HashFunc
+{
+	size_t operator()(const K& key)
+	{
+		return key;
+	}
+};
+
+//模板的特化：类型符合，优先调用特化的版本
+template <>
+struct __HashFunc<string>
+{
+
+	static size_t BKDRHash(const char *str)
+	{
+		unsigned int seed= 131;// 31 131 1313 13131 131313
+		unsigned int hash= 0;
+		while(*str)
+		{
+			hash=hash*seed+ (*str++);
+		}
+		return(hash& 0x7FFFFFFF);
+	}
+
+	size_t operator()(const string& str)
+	{
+		return BKDRHash(str.c_str());
+	}
 };
 
 template<class K, class V>
@@ -31,7 +62,7 @@ struct HashNode
 	{}
 };
 
-template<class K, class V>
+template<class K, class V, class HashFunc=__HashFunc<K> >
 class HashTable
 {
 	typedef HashNode<K, V> Node;
@@ -112,16 +143,19 @@ public:
 		for(int i = 0; i<size; ++i)
 		{
 			if(_table[i]._sta == EXIST)
-				cout << i <<":" << _table[i]._key << " ";
+				cout << i <<":key->" << _table[i]._key << " value->" << _table[i]._value << "	";
 			else
 				cout << i << ":NULL ";
+			if(i%5 == 0)
+				cout << endl;
 		}
 		cout << endl;
 	}
 protected:
 	size_t _HashFunc(const K& key)
 	{
-		return key % _table.size();
+		HashFunc hf;
+		return hf(key) % _table.size();
 	}
 	
 	size_t _GetPrimeSize(size_t size)

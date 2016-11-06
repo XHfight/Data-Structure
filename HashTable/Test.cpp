@@ -23,8 +23,21 @@ void TestHash()
 	cout<<"7?" << hs.Find(7) << endl;
 
 	hs.Print();
-	//hs.Remove(9);
-	//hs.Print();
+	hs.Remove(9);
+	hs.Print();
+
+	HashTable<string, int> hs2;
+	const char* strs[] = {"hello", "hei", "hello","world"};
+	for(size_t i=0; i<sizeof(strs)/sizeof(strs[0]); ++i)
+	{
+		string str(strs[i]);
+		HashNode<string, int>* ret = hs2.Find(str);
+		if(ret)
+			++ret->_value;
+		else
+			hs2.Insert(str, 1);
+	}
+	hs2.Print();
 }
 int main()
 {
