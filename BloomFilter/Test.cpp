@@ -20,6 +20,7 @@ void TestBloomFilter()
 	cout << b1.Test(s1)<< endl;
 	cout << b1.Test(s2)<< endl;
 	cout << b1.Test(s3)<< endl;
+	cout << b1.Test("dsf") << endl;
 }
 int main()
 {

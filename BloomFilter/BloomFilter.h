@@ -19,7 +19,7 @@ struct __HashFunc1
 		 register size_t hash = 0;  
 		 while (size_t ch = (size_t)*str++)  
 		 {         
-			 hash = hash * 131 + ch;   // ä¹Ÿå¯ä»¥ä¹˜ä»¥31ã€131ã€1313ã€13131ã€131313..  
+			 hash = hash * 131 + ch;   // Ò²¿ÉÒÔ³ËÒÔ31¡¢131¡¢1313¡¢13131¡¢131313..  
 		 }
 		return hash;
 	}
@@ -49,7 +49,7 @@ struct __HashFunc2
 	}
 };
 
-struct __HashFun3
+struct __HashFunc3
 {
 	size_t RSHash(const char *str)  
 	{  
@@ -98,7 +98,7 @@ struct __HashFunc5
 {
 	size_t JSHash(const char *str)  
 	{  
-		if(!*str)        // è¿™æ˜¯ç”±æœ¬äººæ·»åŠ ï¼Œä»¥ä¿è¯ç©ºå­—ç¬¦ä¸²è¿”å›å“ˆå¸Œå€¼0  
+		if(!*str)        // ÕâÊÇÓÉ±¾ÈËÌí¼Ó£¬ÒÔ±£Ö¤¿Õ×Ö·û´®·µ»Ø¹şÏ£Öµ0  
 			return 0;  
 	    register size_t hash = 1315423911;  
 		while (size_t ch = (size_t)*str++)  
@@ -125,7 +125,7 @@ class BloomFilter
 {
 public:
 	BloomFilter(size_t num)
-		:_bitmap(num*5) //è®¾å®šæ¯ä¸ªkeyå€¼æ˜ å°„5ä¸ªä½ç½®
+		:_bitmap(num*5) //Éè¶¨Ã¿¸ökeyÖµÓ³Éä5¸öÎ»ÖÃ
 		 ,_size(num*5)
 	{}
 
@@ -140,10 +140,10 @@ public:
 
 	void Reset(const K& key)
 	{
-		//å¼•ç”¨è®¡æ•°å®ç°
+		//ÒıÓÃ¼ÆÊıÊµÏÖ
 	}
 
-	void Test(const K& key)
+	bool Test(const K& key)
 	{
 		if(_bitmap.Test(HashFunc1()(key)%_size) == false)
 			return false;
