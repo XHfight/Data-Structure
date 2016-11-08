@@ -15,12 +15,12 @@ class BitMap
 public:
 	BitMap(size_t range)	
 	{
-		_map.resize(range>>3+1);
+		_map.resize((range>>3)+1);
 	}
-	void Set(size_t data) //å¯¹åº”ä½ç½®1
+	void Set(size_t data) //¶ÔÓ¦Î»ÖÃ1
 	{
-		size_t index = data >> 3; //ç¬¬å‡ ä¸ªæ•°
-		size_t bit = data % 8; //ç¬¬å‡ ä½
+		size_t index = data >> 3; //µÚ¼¸¸öÊý
+		size_t bit = data % 8; //µÚ¼¸Î»
 		_map[index] |= ( 1 << bit);
 	}
 	void Reset(size_t data)
