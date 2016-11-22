@@ -166,7 +166,90 @@ void TestBubbleSort()
 }
 
 //快速排序
+//优化一：三数取中法
+size_t GetMid(int* arr, size_t left, size_t right)
+{
+	size_t mid = left+((right-left)>>2);
+	if(arr[left] < arr[mid])
+	{
+		if(arr[mid] < arr[right])
+			return mid;
+		else if(arr[left] < arr[right])
+			return right;
+		else
+			return left;
+	}
+	else  //left大
+	{
+		if(arr[left] < arr[right])
+			return left;
+		else if(arr[right] < arr[mid])
+			return mid;
+		else
+			return right;
+	}
+}
+size_t PartSort1(int* arr, size_t left, size_t right)
+{
+	size_t key = right;
+	size_t mid = GetMid(arr, left, right);
+	if(key != mid)
+		swap(arr[key], arr[right]);
+	while(left < right)
+	{
+		//left找大
+		while(left < right && arr[left] <= arr[key])
+			++left;
+		while(left < right && arr[right] >= arr[key])
+			--right;
+		swap(arr[left], arr[right]);
+	}
+	if(right != key)
+		swap(arr[left], arr[key]);
+	return left;
+}
 
+size_t PartSort2(int* arr, size_t left, size_t right)
+{
+	int key = arr[right];
+	while(left < right)
+	{
+		while(left < right && arr[left] <= key)
+			++left;
+		arr[right] = arr[left];
+
+		while(left < right && arr[right] >= key)
+			--right;
+		arr[left] = arr[right];
+	}
+	//right == left
+	arr[right] = key;
+	return right;
+}
+
+
+//size_t PartSort3()
+
+void QuickSort(int* arr, size_t left, size_t right)
+{
+	assert(arr);
+	if(right-left > 0)
+	{
+		int div = PartSort1(arr, left, right);
+		//[left, div-1] [div+1, right]
+		if(div != left) //注意：当div为边界时，边界的一边不需要继续排序
+			QuickSort(arr, left, div-1);
+		if(div != right)
+			QuickSort(arr, div+1, right);
+	}
+}
+
+void TestQuickSort()
+{
+	int arr[] = {3, 5, 7, 2, 4, 9, 1, 0, 8, 6};
+	QuickSort(arr, 0, sizeof(arr)/sizeof(arr[0])-1);
+	PrintArr(arr,sizeof(arr)/sizeof(arr[0]));
+}
 //归并排序
 
 int main()
@@ -176,5 +259,6 @@ int main()
 	TestSelectSort();
 	TestBubbleSort();
 	TestHeapSort();
+	TestQuickSort();
 	return 0;
 }
