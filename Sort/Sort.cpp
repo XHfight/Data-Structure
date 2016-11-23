@@ -249,12 +249,20 @@ void QuickSort(int* arr, size_t left, size_t right)
 	assert(arr);
 	if(right-left > 0)
 	{
-		int div = PartSort3(arr, left, right);
-		//[left, div-1] [div+1, right]
-		if(div != left) //注意：当div为边界时，边界的一边不需要继续排序
-			QuickSort(arr, left, div-1);
-		if(div != right)
-			QuickSort(arr, div+1, right);
+		//优化二：区间数量较少时，用插入排序替代递归
+		if(right-left > 5)  
+		{
+			int div = PartSort3(arr, left, right);
+			//[left, div-1] [div+1, right]
+			if(div != left) //注意：当div为边界时，边界的一边不需要继续排序
+				QuickSort(arr, left, div-1);
+			if(div != right)
+				QuickSort(arr, div+1, right);
+		}
+		else
+		{
+			InsertSort(&arr[left], right-left+1);
+		}
 	}
 }
 
