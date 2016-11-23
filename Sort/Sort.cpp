@@ -189,6 +189,7 @@ size_t GetMid(int* arr, size_t left, size_t right)
 			return right;
 	}
 }
+//法1：左右指针
 size_t PartSort1(int* arr, size_t left, size_t right)
 {
 	size_t key = right;
@@ -209,6 +210,7 @@ size_t PartSort1(int* arr, size_t left, size_t right)
 	return left;
 }
 
+//法2：挖坑法
 size_t PartSort2(int* arr, size_t left, size_t right)
 {
 	int key = arr[right];
@@ -227,15 +229,27 @@ size_t PartSort2(int* arr, size_t left, size_t right)
 	return right;
 }
 
-
-//size_t PartSort3()
+//法3：前后指针法
+size_t PartSort3(int* arr, int left, int right)
+{
+	int cur = left-1;
+	int prev = left-1;
+	int key = right;
+	while(cur < right)
+	{
+		while(cur < right && arr[++cur] >= arr[key]);//cur找小
+		++prev;
+		swap(arr[prev], arr[cur]);
+	}
+	return prev;
+}
 
 void QuickSort(int* arr, size_t left, size_t right)
 {
 	assert(arr);
 	if(right-left > 0)
 	{
-		int div = PartSort1(arr, left, right);
+		int div = PartSort3(arr, left, right);
 		//[left, div-1] [div+1, right]
 		if(div != left) //注意：当div为边界时，边界的一边不需要继续排序
 			QuickSort(arr, left, div-1);
@@ -250,7 +264,66 @@ void TestQuickSort()
 	QuickSort(arr, 0, sizeof(arr)/sizeof(arr[0])-1);
 	PrintArr(arr,sizeof(arr)/sizeof(arr[0]));
 }
+
 //归并排序
+
+//[left, right]
+void MSort(int* arr,int* tmp, int left, int right)
+{
+	if(right - left > 0)
+	{
+		int mid = left+(right-left)/2;
+		MSort(arr, tmp, left, mid);
+		MSort(arr, tmp, mid+1, right);
+		
+		//合并
+		int begin1 = left, end1 = mid;
+		int begin2 = mid+1, end2 = right;
+		int i = left;
+		while(begin1<=end1 && begin2<= end2)
+		{
+			if(arr[begin1] < arr[begin2])
+			{
+				tmp[i++] = arr[begin1];
+				++begin1;
+			}
+			else
+			{
+				tmp[i++] = arr[begin2];
+				++begin2;
+			}
+		}
+		while(begin1 <= end1)
+		{
+			tmp[i++] = arr[begin1];
+			++begin1;
+		}
+		while(begin2 <= end2)
+		{
+			tmp[i++] = arr[begin2];
+			++begin2;
+		}
+		for(int j = left; j <= right; ++j)
+		{
+			arr[j] = tmp[j];
+		}
+	}
+
+}
+void MergeSort(int* arr, size_t size)
+{
+	assert(arr);
+	int* tmp = new int[size];
+	MSort(arr, tmp, 0, size-1);
+	delete[] tmp;
+}
+
+void TestMergeSort()
+{
+	int arr[] = {3, 5, 7, 2, 4, 9, 1, 0, 8, 6};
+	MergeSort(arr,sizeof(arr)/sizeof(arr[0]));
+	PrintArr(arr,sizeof(arr)/sizeof(arr[0]));
+}
 
 int main()
 {
@@ -260,5 +333,6 @@ int main()
 	TestBubbleSort();
 	TestHeapSort();
 	TestQuickSort();
+	TestMergeSort();
 	return 0;
 }
