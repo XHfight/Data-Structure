@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cassert>
+#include <memory.h>
 using namespace std;
 
 void PrintArr(int* arr, size_t size)
@@ -11,7 +12,8 @@ void PrintArr(int* arr, size_t size)
 	cout << endl;
 }
 
-//插入排序
+//七种比较排序
+//1.插入排序
 void InsertSort(int* arr, size_t size)
 {
 	assert(arr);
@@ -37,7 +39,7 @@ void TestInsertSort()
 	PrintArr(arr,sizeof(arr)/sizeof(arr[0]));
 }
 
-//希尔排序
+//2.希尔排序
 void ShellSort(int* arr, size_t size)
 {
 	assert(arr);
@@ -67,6 +69,7 @@ void TestShellSort()
 	PrintArr(arr,sizeof(arr)/sizeof(arr[0]));
 }
 
+//3. 选择排序
 void SelectSort(int* arr, size_t size)
 {
 	assert(arr);
@@ -100,6 +103,7 @@ void TestSelectSort()
 	PrintArr(arr,sizeof(arr)/sizeof(arr[0]));
 }
 
+//4.堆排序
 void AdjustDown(int* arr, size_t size, size_t parent)
 {
 	size_t child = parent*2+1;
@@ -116,7 +120,6 @@ void AdjustDown(int* arr, size_t size, size_t parent)
 	}
 }
 
-//堆排序
 void HeapSort(int* arr, size_t size)
 {
 	assert(arr);
@@ -144,6 +147,7 @@ void TestHeapSort()
 	PrintArr(arr,sizeof(arr)/sizeof(arr[0]));
 }
 
+//5. 冒泡排序
 void BubbleSort(int* arr, size_t size)
 {
 	assert(arr);
@@ -165,7 +169,7 @@ void TestBubbleSort()
 	PrintArr(arr,sizeof(arr)/sizeof(arr[0]));
 }
 
-//快速排序
+//6.快速排序
 //优化一：三数取中法
 size_t GetMid(int* arr, size_t left, size_t right)
 {
@@ -273,7 +277,7 @@ void TestQuickSort()
 	PrintArr(arr,sizeof(arr)/sizeof(arr[0]));
 }
 
-//归并排序
+//7.归并排序
 
 //[left, right]
 void MSort(int* arr,int* tmp, int left, int right)
@@ -333,6 +337,117 @@ void TestMergeSort()
 	PrintArr(arr,sizeof(arr)/sizeof(arr[0]));
 }
 
+//两种非比较排序
+//1.计数排序:利用哈希的直接定址法，适用于数据比较集中的排序
+void CountSort(int* arr, size_t size)
+{
+	assert(arr);
+	int max = arr[0];
+	int min = arr[0];
+	for(int i = 1 ; i < size; ++i)
+	{
+		if(arr[i] > max)
+			max = arr[i];
+		if(arr[i] < min)
+			min = arr[i];
+	}
+	int range = max - min + 1;
+	int* tmp = new int[range];//存储每个数据出现的次数
+	memset(tmp, 0, sizeof(tmp[0])*range);
+	for(int i = 0; i < size; ++i)
+	{
+		tmp[arr[i] - min]++;
+	}
+
+	int j = 0;
+	for(int i = 0; i < range; ++i)
+	{
+		while(tmp[i]--)
+		{
+			arr[j++] = min + i;
+		}
+	}
+	delete[] tmp;
+}
+
+void TestCountSort()
+{
+	int arr[] = {3, 5, 7, 2, 4, 9, 1, 0, 8, 6};
+	int arr2[] = {103, 105, 107, 102,104, 109, 101,100, 108, 106};
+	CountSort(arr2, sizeof(arr2)/sizeof(arr2[0]));
+	PrintArr(arr2, sizeof(arr2)/sizeof(arr2[0]));
+}
+//2.基数排序
+// 最高位优先 -- MSD
+// 最低位优先 -- LSD
+//
+
+void MSDSort(int* arr, size_t size)
+{
+	assert(arr);
+	int max = arr[0];
+	for(int i = 1; i < size; ++i)
+		if(arr[i] > max)
+			max = arr[i];
+	
+	//统计最大位数
+	int digit = 1; //最大位数
+	int div = 10;
+	while((max / div) > 0)
+	{
+		++digit;
+		div *= 10;
+	}
+	
+	//从低位到高位排序
+	int* beginIndex = new int[10];//记录每个桶的开始下标
+	int* tmp = new int[size];
+	
+	div = 1;
+	while(digit--)
+	{
+		//统计每个桶的开始下标
+		memset(beginIndex, 0, sizeof(beginIndex[0])*10);
+		
+		for(int i = 0; i < size; ++i)//统计每个桶的数据个数
+		{
+			size_t index = (arr[i]/div) % 10;
+			beginIndex[index]++;
+		}
+		int index = 0;
+		for(int i = 0; i < 10; ++i)//计算每个桶的开始下标
+		{
+			int count = beginIndex[i];
+			beginIndex[i]  = index;
+			index += count;
+		}
+
+		//将单次排序数据写入临时数组
+		for(int i = 0; i < size; ++i)
+		{
+			size_t index = (arr[i]/div) % 10;
+			tmp[beginIndex[index]++] = arr[i];
+		}
+	
+		div *= 10;
+		//将tmp的数据拷贝到arr中
+		for(int i =0 ;i < size; ++i)
+		{
+			arr[i] = tmp[i];
+		}
+	}
+
+	delete[] beginIndex;
+	delete[] tmp;
+}
+
+void TestMSDSort()
+{
+	//int arr[] = {3, 5, 7, 2, 4, 9, 1, 0, 8, 6};
+	int arr[] = {276, 109, 63, 930, 589, 184, 505, 269, 8, 83};
+	MSDSort(arr, sizeof(arr)/sizeof(arr[0]));
+	PrintArr(arr, sizeof(arr)/sizeof(arr[0]));
+}
 int main()
 {
 	TestInsertSort();
@@ -342,5 +457,7 @@ int main()
 	TestHeapSort();
 	TestQuickSort();
 	TestMergeSort();
+	TestCountSort();
+	TestMSDSort();
 	return 0;
 }
