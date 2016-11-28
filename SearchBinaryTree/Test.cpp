@@ -62,9 +62,39 @@ void TestSearchBinaryTreeR()
 	h1.InOrder();
 
 }
+
+void TestToOrderedDoubleList()
+{
+	int arr[] = {5, 3, 4, 1, 7, 8, 2, 6, 0, 9};
+	SearchBinaryTree<int, int> h1;
+	for(int i = 0; i<sizeof(arr)/sizeof(arr[0]); ++i)
+	{
+		h1.InsertR(arr[i]);
+	}
+
+	SearchBinaryTreeNode<int, int>* cur = h1.ToOrderedDoubleList();
+	SearchBinaryTreeNode<int, int>* last = NULL;
+	//正向遍历
+	while(cur)
+	{
+		cout << cur->_key << " ";
+		last = cur;
+		cur = cur->_right;
+	}
+	cout << endl;
+
+	//反向遍历
+	while(last)
+	{
+		cout << last->_key << " ";
+		last = last->_left;
+	}
+	cout << endl;
+}
 int main()
 {
-	TestSearchBinaryTree();
-	TestSearchBinaryTreeR();
+	//TestSearchBinaryTree();
+	//TestSearchBinaryTreeR();
+	TestToOrderedDoubleList();
 	return 0;
 }

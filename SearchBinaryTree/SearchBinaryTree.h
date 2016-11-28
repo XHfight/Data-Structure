@@ -1,9 +1,9 @@
 /*************************************************************************
-	> File Name: BinarySearchTree.h
-	> Author: XH
-	> Mail: X_H_fight@163.com 
-	> Created Time: Mon 17 Oct 2016 10:52:07 PM CST
- ************************************************************************/
+> File Name: BinarySearchTree.h
+> Author: XH
+> Mail: X_H_fight@163.com 
+> Created Time: Mon 17 Oct 2016 10:52:07 PM CST
+************************************************************************/
 
 #pragma once
 #include <iostream>
@@ -19,9 +19,9 @@ struct SearchBinaryTreeNode
 
 	SearchBinaryTreeNode(const K& key)
 		:_key(key)
-		 ,_value(V())
-		 ,_left(NULL)
-		 ,_right(NULL)
+		,_value(V())
+		,_left(NULL)
+		,_right(NULL)
 	{}
 };
 
@@ -33,12 +33,13 @@ public:
 	SearchBinaryTree()
 		:_root(NULL)
 	{}
-	
+
 	SearchBinaryTree(const SearchBinaryTree<K,V>& sTree)
 	{
 		_root = _CopyTree(sTree._root);
 	}
-
+	//非递归版
+	//插入
 	bool Insert(const K& key)
 	{
 		Node* cur = _root;
@@ -81,7 +82,7 @@ public:
 		cout << endl;
 	}
 
-    //key不支持修改
+	//查找：key不支持修改
 	bool Find(const K& key)
 	{
 		Node* cur = _root;
@@ -97,6 +98,7 @@ public:
 		return false;
 	}
 
+	//删除
 	bool Remove(const K& key)
 	{
 		Node* parent = NULL;
@@ -167,6 +169,7 @@ public:
 		return false;
 	}
 
+	//递归版
 	bool FindR(const K& key)
 	{
 		return _FindR(_root, key);
@@ -182,12 +185,50 @@ public:
 		return _RemoveR(_root, key);
 	}
 
-	~SearchBinaryTree()
+	//调用了ToOrderedDoubleList()，将树的内部结构调整了，所以析构会出现错误，先屏蔽掉
+
+	//~SearchBinaryTree()
+	//{
+	//	_DestoryTree(_root);
+	//	_root = NULL;
+	//}
+
+
+	/*
+	思路：由搜索二叉树的特点（左<根<右），可以得到当中序遍历为有序。将左看作双向链表的prev指		针，右看作next指针。
+		
+		中序递归，将左子树（链表）的最后一个结点作为当前结点的left，最后一个结点的right为当			前结点。(相当于将中序遍历的每个结点依次插入到有序的链表中)。
+	*/
+	Node* ToOrderedDoubleList() //将搜索二叉树转换成有序的双向链表（递归）
 	{
-		_DestoryTree(_root);
-		_root = NULL;
+		Node* lastNode = NULL;
+		Node* head = _root;
+		while(head && head->_left!=NULL)
+		{
+			head = head->_left;
+		}
+		_ToOrderedDoubleList(_root, lastNode);
+		return head;
 	}
+
 protected:
+	void _ToOrderedDoubleList(Node* root, Node*& lastNode)
+	{
+		if(root == NULL)
+			return;
+		if(root->_left != NULL)
+			_ToOrderedDoubleList(root->_left, lastNode);
+
+		root->_left = lastNode;
+		if(lastNode != NULL)
+			lastNode->_right= root;
+
+		lastNode = root;
+
+		if(root->_right != NULL)
+			_ToOrderedDoubleList(root->_right, lastNode);
+	}
+
 	void _DestoryTree(Node* root)
 	{
 		if(root == NULL)
@@ -247,7 +288,7 @@ protected:
 		else
 			return _InsertR(root->_right, key);
 	}
-	
+
 	bool _RemoveR(Node*& root, const K& key)
 	{
 		if(root == NULL)
