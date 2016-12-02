@@ -1,4 +1,4 @@
-/*************************************************************************
+﻿/*************************************************************************
 	> File Name: Graph.h
 	> Author: XH
 	> Mail: X_H_fight@163.com 
@@ -222,7 +222,7 @@ public:
 			minTree._vertex.push_back(_vertex[i]);
 		}
 		//初始化边数组
-		_list.resize(_vertex.size());
+		minTree._list.resize(_vertex.size());
 		
 		//利用小堆选最小边
 		struct EdgeCompare
@@ -247,6 +247,8 @@ public:
 		//选出最小权值边插入最小生成树集合，判断两端点不在同一集合中，利用并查集
 		
 		int edgeNum  = 0; //
+		UnionFind uf(_vertex.size());
+
 		while(edgeNum < _vertex.size()-1)
 		{
 			if(minHeap.Empty())
@@ -258,12 +260,13 @@ public:
 			minHeap.Pop();
 			
 			//检查两端点是否在同一集合：并查集中，两端点的根是否相同
-			UnionFind uf(_vertex.size());
 			size_t root1 = uf.FindRoot(min->_src);
 			size_t root2 = uf.FindRoot(min->_dst);
 			if(root1 != root2)
 			{
-				_Insert(min->_src, min->_dst, min->_weight);
+				minTree._Insert(min->_src, min->_dst, min->_weight);
+				minTree._Insert(min->_dst, min->_src, min->_weight);
+
 				uf.Union(min->_src, min->_dst);
 				++edgeNum;
 			}

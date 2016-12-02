@@ -62,5 +62,6 @@ int main()
 //	TestGraphMatrix();
 //	TestGraphList();
 	TestMinTree();
+	system("pause");
 	return 0;
 }

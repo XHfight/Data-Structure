@@ -70,6 +70,11 @@ public:
 		assert(!_heap.empty());
 		return _heap[0];
 	}
+
+	bool Empty()
+	{
+		return _heap.empty();
+	}
 protected:
 	//向下调整
 	void _AdjustDown(size_t i)
