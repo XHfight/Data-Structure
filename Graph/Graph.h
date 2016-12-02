@@ -6,6 +6,8 @@
  ************************************************************************/
 
 #pragma once
+#include "Heap.h"
+#include "UnionFind.h"
 #include <queue>
 #include <stdio.h>
 #include <vector>
@@ -113,6 +115,10 @@ class GraphList
 {
 	typedef GraphListNode<W> Node;
 public:
+	GraphList(bool isDirected = false)
+	:_isDirected(isDirected)
+	{}
+
 	GraphList(V* vertex, size_t size, bool isDirected = false)
 	 :_isDirected(isDirected)
 	{
@@ -199,6 +205,70 @@ public:
 			}
 		}
 		cout << "NULL" << endl;
+	}
+
+	//求最小生成树
+	//贪心算法：局部最优，不一定全局最优。Kruskal和Prim算法
+	
+	//Kruskal算法针对无向连通图求他的最小生成树
+	//思路：选出一条具有最小权值，且两端点不在同一集合中（保证不构成回路），则加入生成树。
+	bool Kruskal(GraphList<V, W>& minTree)
+	{
+		assert(_isDirected == false);
+		//初始化minTree
+		//初始化顶点数组
+		for(int i = 0; i < _vertex.size(); ++i)
+		{
+			minTree._vertex.push_back(_vertex[i]);
+		}
+		//初始化边数组
+		_list.resize(_vertex.size());
+		
+		//利用小堆选最小边
+		struct EdgeCompare
+		{
+			bool operator()(const Node* l, const Node* r) const
+			{
+				return l->_weight < r->_weight;
+			}
+		};
+
+		Heap<Node*, EdgeCompare> minHeap;
+		for(int i = 0; i < _list.size(); ++i)
+		{
+			Node* cur = _list[i];
+			while(cur)
+			{
+				minHeap.Push(cur);
+				cur = cur->_next;
+			}
+		}
+		
+		//选出最小权值边插入最小生成树集合，判断两端点不在同一集合中，利用并查集
+		
+		int edgeNum  = 0; //
+		while(edgeNum < _vertex.size()-1)
+		{
+			if(minHeap.Empty())
+			{
+				return false;
+			}
+
+			Node* min = minHeap.Top();
+			minHeap.Pop();
+			
+			//检查两端点是否在同一集合：并查集中，两端点的根是否相同
+			UnionFind uf(_vertex.size());
+			size_t root1 = uf.FindRoot(min->_src);
+			size_t root2 = uf.FindRoot(min->_dst);
+			if(root1 != root2)
+			{
+				_Insert(min->_src, min->_dst, min->_weight);
+				uf.Union(min->_src, min->_dst);
+				++edgeNum;
+			}
+		}
+		return true;
 	}
 protected:
 	void _DFS(size_t index, vector<bool>& visited)
