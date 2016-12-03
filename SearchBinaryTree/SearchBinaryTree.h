@@ -197,36 +197,36 @@ public:
 	/*
 	思路：由搜索二叉树的特点（左<根<右），可以得到当中序遍历为有序。将左看作双向链表的prev指		针，右看作next指针。
 		
-		中序递归，记录前一个结点（初始为空），前一个结点的右指向当前结点，当前结点的左指向前一个结点)。
+		中序递归，记录前一个结点（初始为空），前一个结点的右指向当前结点，当前结点的左指向前一个结点。
 	*/
 	Node* ToOrderedDoubleList() //将搜索二叉树转换成有序的双向链表（递归）
 	{
-		Node* lastNode = NULL;
+		Node* prev = NULL;
 		Node* head = _root;
 		while(head && head->_left!=NULL)
 		{
 			head = head->_left;
 		}
-		_ToOrderedDoubleList(_root, lastNode);
+		_ToOrderedDoubleList(_root, prev);
 		return head;
 	}
 
 protected:
-	void _ToOrderedDoubleList(Node* root, Node*& lastNode)
+	void _ToOrderedDoubleList(Node* root, Node*& prev)
 	{
 		if(root == NULL)
 			return;
 		if(root->_left != NULL)
-			_ToOrderedDoubleList(root->_left, lastNode);
+			_ToOrderedDoubleList(root->_left, prev);
 
-		root->_left = lastNode;
-		if(lastNode != NULL)
-			lastNode->_right= root;
+		root->_left = prev;
+		if(prev != NULL)
+			prev->_right= root;
 
-		lastNode = root;
+		prev = root;
 
 		if(root->_right != NULL)
-			_ToOrderedDoubleList(root->_right, lastNode);
+			_ToOrderedDoubleList(root->_right, prev);
 	}
 
 	void _DestoryTree(Node* root)
