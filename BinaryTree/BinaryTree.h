@@ -2,6 +2,7 @@
 #include <stack>
 #include <queue>
 #include <iostream>
+#include <cassert>
 using namespace std;
 
 template <class T>
@@ -30,6 +31,19 @@ public:
 		size_t index = 0;
 		_root = _BinaryTree(arr, size, index, invalid);
 	}
+
+
+	/*
+	由前序遍历和中序遍历重建二叉树（前序序列：1 2 3 4 5 6 - 中序序列:3 2 4 1 6 5）
+	*/
+	void CreateBinaryTree(const T* prevOrderArr, const T* inOrderArr, size_t size1, size_t size2)
+	{
+		assert(prevOrderArr && inOrderArr);
+		assert(size1 == size2);
+		int prevArrIndex = 0;
+		_root = _CreatTree(prevOrderArr, inOrderArr, prevArrIndex, 0, size1-1);
+	}
+
 	BinaryTree(const BinaryTree<T>& t)
 	{
 		_root = _Copy(t._root);
@@ -174,7 +188,125 @@ public:
 	{
 		return _GetKLevel(_root, k);
 	}
+
+	/*
+	求二叉树中最远的两个结点的距离
+	*/
+
+	//方法一：时间复杂度O(N^2)
+	//思路：先求出以每个结点为根的最远距离，在求出的所有距离中选最大的就是整棵二叉树中最远的两个结点的距离
+	size_t GetFarthestDistance1()
+	{
+		return _GetFarthestDistance1(_root);
+	}
+
+	//方法二：时间复杂度(N)
+	//思路：
+	//1，后序遍历每一节点，找出该节点到最右边的距离以及最左边的距离；
+	//2，找到之和最大的即可。
+	size_t GetFarthestDistance2()
+	{
+		int rightDep = 0, leftDep = 0;
+		return _GetFarthestDistance2(_root, leftDep, rightDep);
+	}
+
+
+	/*
+	求树中两个结点的最近公共祖先
+	*/
+
+	//情景一：当这棵树为搜索二叉树
+	//情景二：这棵树是一般的树，它是三叉链
+	//情景三：这棵树就是一般的二叉链的树
+	Node* RecentlyRoot(Node* node1, Node* node2)
+	{
+		//实现？？？
+		return NULL;
+	}
 private:
+	//中序区间[left, right]
+	Node* _CreatTree(const T* prevOrderArr, const T* inOrderArr, int& prevIndex, int left, int right)
+	{
+		Node* root = NULL;
+		if (right >= left)
+		{
+			root = new Node(prevOrderArr[prevIndex]);
+
+			int index = -1;  //当前结点在中序遍历数组中的下标
+			for (int i = left; i <= right; ++i)
+			{
+				if (inOrderArr[i] == prevOrderArr[prevIndex])
+					index = i;
+			}
+
+			//如果index == -1,则证明传入前序和中序的数组不匹配
+			assert(index != -1);
+			
+			++prevIndex;
+			root->_left = _CreatTree(prevOrderArr, inOrderArr, prevIndex, left, index - 1);
+			root->_right = _CreatTree(prevOrderArr, inOrderArr, prevIndex, index + 1, right);
+		}
+		return root;
+	}
+
+	size_t _GetFarthestDistance2(Node* root, int& leftDep, int& rightDep)
+	{
+		if (root == NULL)
+		{
+			leftDep = 0;
+			rightDep = 0;
+			return 0;
+		}
+
+		int llDep = 0, lrDep = 0; //左子树的左深度和左子树的右深度
+		int leftDis = _GetFarthestDistance2(root->_left, llDep, lrDep);
+
+		int rlDep = 0, rrDep = 0;//右子树的左深度和右子树的右深度
+		int rightDis = _GetFarthestDistance2(root->_right, rlDep, rrDep);
+		
+		//选出左右的较大者为当前的左/右子树的深度
+		leftDep = llDep > lrDep ? llDep : lrDep;
+		rightDep = rlDep > rrDep ? rlDep : rrDep;
+
+		int farthestDis = rightDep + leftDep;
+		//左子树返回的，右子树返回的， 和当前的 三者选最大为当前最大距离
+		if (leftDis > rightDis)
+		{
+			if (leftDis > farthestDis)
+				farthestDis = leftDis;
+		}
+		else
+		{
+			if (rightDis > farthestDis)
+				farthestDis = rightDis;
+		}
+
+		++leftDep;
+		++rightDep;
+
+		return farthestDis;
+	}
+
+	size_t  _GetFarthestDistance1(Node* root)
+	{
+		if (root == NULL)
+			return 0;
+
+		//计算以当前结点为根的树中两个结点的最大距离
+		size_t left = _Depth(root->_left);
+		size_t right = _Depth(root->_right);
+		int dis = left + right;
+		
+		//选择最大距离放入dis里面
+		int leftDis = _GetFarthestDistance1(root->_left);
+		int rightDis = _GetFarthestDistance1(root->_right);
+		int max = (leftDis > rightDis) ? leftDis : rightDis;
+		if (max > dis)
+			dis = max;
+
+		return dis;
+	}
+
 	Node* _BinaryTree(const T* arr, size_t size, size_t& index, const T& invalid)
 	{
 		if (index < size && arr[index] != invalid)

@@ -40,9 +40,39 @@ void TestBinaryTree()
 	cout << "t3.LeafSize():" << t3.LeafSize() << endl;
 
 }
+
+void TestDistance()
+{
+	int arr[] = { 1, 2, 3, '#', '#', 4, '#', '#', 5, 6 };
+	int arr2[] = { 1, 2, '#', 3, '#', '#', 4, 5, '#', 6, '#', 7, '#', '#', 8 };
+	BinaryTree<int> t1(arr, sizeof(arr) / sizeof(arr[0]), '#');
+	t1.PrevOrder();
+	BinaryTree<int> t2(arr2, sizeof(arr2) / sizeof(arr2[0]), '#');
+	t2.PrevOrder();
+
+	cout << t1.GetFarthestDistance1() << endl;
+	cout << t2.GetFarthestDistance1() << endl;
+
+	cout << t1.GetFarthestDistance2() << endl;
+	cout << t2.GetFarthestDistance2() << endl;
+
+}
+
+
+void TestCreateBinaryTree()  //测试前序和中序重建二叉树
+{
+	int prev[] = { 1, 2, 3, 4, 5, 6 };
+	int in[] = { 3, 2, 4, 1, 6, 5 };
+	BinaryTree<int> tree;
+	tree.CreateBinaryTree(prev, in, sizeof(prev) / sizeof(prev[0]), sizeof(in)/sizeof(in[0]));
+	tree.PrevOrder();
+}
+
 int main()
 {
-	TestBinaryTree();
+//	TestBinaryTree();
+	//TestDistance();
+	TestCreateBinaryTree();
 	system("pause");
 	return 0;
 }
