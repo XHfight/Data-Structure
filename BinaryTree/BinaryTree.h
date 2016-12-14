@@ -170,6 +170,11 @@ public:
 		}
 		cout << endl;
 	}
+
+	Node* Find(const T& x)
+	{
+		return _Find(_root, x);
+	}
 	size_t Size()
 	{
 		return _Size(_root);
@@ -292,14 +297,54 @@ public:
 	*/
 
 	//情景一：当这棵树为搜索二叉树
+	//思路：比较当前结点与已知两结点的key值大小
+	//（1）如果已知两结点key值都大于当前结点，进入左子树找；
+	//（2）如果已知两结点key值都小于当前结点，进入右子树找；
+	//（3）如果当前结点key值介于已知两结点的中间， 则最近公共祖先为当前结点。
+
 	//情景二：这棵树是一般的树，它是三叉链
+	//思路：将两个结点到根节点这段看作两个链表，这两个链表的尾结点为根节点，将问题转换为求两个链表的交点问题。
+	//方法一：将一个结点的所有祖先结点包括该节点 在 另一个结点的所有祖先结点包括另一个结点 中找一遍，如果发现相等，则找到，否则，没找到。
+	//方法二（优）：遍历两个链表，算出长度，假如1比2长n，先让1走n步，然后1和2一起走，找到相同节点，就为最近公共祖先。
+
 	//情景三：这棵树就是一般的二叉链的树
-	Node* RecentlyRoot(Node* node1, Node* node2)
+	//方法一：找到根到结点1和结点2的路径，分别存储起来。遍历存储的两个路径，当遇到不同的结点时停下来，则上一个结点为最近公共祖先。
+	//方法二：递归遍历二叉树
+	//若根节点是等于结点1或结点2，则返回根节点。两个结点都位于左或都位于右子树则返回最近的那个结点，一左一右则返回根。
+	Node* RecentlyCommonAncestor(Node* node1, Node* node2)  //方法二实现
 	{
-		//实现？？？
-		return NULL;
+		return _RecentlyCommonAncestor(_root, node1, node2);
 	}
 private:
+	Node* _RecentlyCommonAncestor(Node* root, Node* node1, Node* node2)
+	{
+		if (root == NULL)
+			return NULL;
+		if (root == node1 || root == node2)
+		{
+			return root;
+		}
+
+		Node* left = _RecentlyCommonAncestor(root->_left, node1, node2);
+		Node* right = _RecentlyCommonAncestor(root->_right, node1, node2);
+
+		if (left && right)
+			return root;
+
+		return left ? left : right;
+	}
+
+	Node* _Find(Node* root, const T& x)
+	{
+		if (root == NULL)
+			return NULL;
+		if (root->_data == x)
+			return root;
+		Node* left = _Find(root->_left, x);
+		Node* right = _Find(root->_right, x);
+		return left ? left : right;
+	}
+
 	//中序区间[left, right]
 	Node* _CreatTree(const T* prevOrderArr, const T* inOrderArr, int& prevIndex, int left, int right)
 	{

@@ -90,12 +90,36 @@ void TestIsCompleteBinaryTree() //测试判断一棵二叉树是否为完全二叉树
 	cout << t4.IsCompleteBinaryTree2() << endl;  //0
 }
 
+void TestRecentlyCommonAncestor()
+{
+	int arr1[] = { 1, 2, 3, '#', '#', 4, '#', '#', 5, 6 };
+	int arr4[] = { 1, 2, '#', 3, '#', '#', 4, 5, '#', 6, '#', 7, '#', '#', 8 };
+	BinaryTree<int> t1(arr1, sizeof(arr1) / sizeof(arr1[0]), '#');
+	BinaryTree<int> t4(arr4, sizeof(arr4) / sizeof(arr4[0]), '#');
+
+	BinaryTreeNode<int>* node1 = t1.Find(4);
+	BinaryTreeNode<int>* node2 = t1.Find(6);
+	cout << (t1.RecentlyCommonAncestor(node1, node2))->_data << endl;//1
+	node1 = t1.Find(2);
+	node2 = t1.Find(3);
+	cout << (t1.RecentlyCommonAncestor(node1, node2))->_data << endl;//2
+
+	node1 = t4.Find(6);
+	node2 = t4.Find(8);
+	cout << (t4.RecentlyCommonAncestor(node1, node2))->_data << endl;//4
+
+	node1 = t4.Find(2);
+	node2 = t4.Find(4);
+	cout << (t4.RecentlyCommonAncestor(node1, node2))->_data << endl;//1
+
+}
 int main()
 {
 	//TestBinaryTree();
 	//TestDistance();
 	//TestCreateBinaryTree();
-	TestIsCompleteBinaryTree();
+	//TestIsCompleteBinaryTree();
+	TestRecentlyCommonAncestor();
 	system("pause");
 	return 0;
 }
