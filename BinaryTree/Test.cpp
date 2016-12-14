@@ -68,11 +68,34 @@ void TestCreateBinaryTree()  //测试前序和中序重建二叉树
 	tree.PrevOrder();
 }
 
+void TestIsCompleteBinaryTree() //测试判断一棵二叉树是否为完全二叉树
+{
+	int arr1[] = { 1, 2, 3, '#', '#', 4, '#', '#', 5, 6 };
+	int arr2[] = { 1, 2, 3, '#', '#', '#', '#', '#', 5, 6 };
+	int arr3[] = { 1, 2, 3, '#', '#', '#', '#', '#', 5, '#', '#', 6 };
+	int arr4[] = { 1, 2, '#', 3, '#', '#', 4, 5, '#', 6, '#', 7, '#', '#', 8 };
+	BinaryTree<int> t1(arr1, sizeof(arr1) / sizeof(arr1[0]), '#');
+	BinaryTree<int> t2(arr2, sizeof(arr2) / sizeof(arr2[0]), '#');
+	BinaryTree<int> t3(arr1, sizeof(arr3) / sizeof(arr3[0]), '#');
+	BinaryTree<int> t4(arr1, sizeof(arr4) / sizeof(arr4[0]), '#');
+
+	cout << t1.IsCompleteBinaryTree1() << endl;  //1
+	cout << t2.IsCompleteBinaryTree1() << endl;  //0
+	cout << t3.IsCompleteBinaryTree1() << endl;  //0
+	cout << t4.IsCompleteBinaryTree1() << endl;  //0
+	cout << endl;
+	cout << t1.IsCompleteBinaryTree2() << endl;  //1
+	cout << t2.IsCompleteBinaryTree2() << endl;  //0
+	cout << t3.IsCompleteBinaryTree2() << endl;  //0
+	cout << t4.IsCompleteBinaryTree2() << endl;  //0
+}
+
 int main()
 {
-//	TestBinaryTree();
+	//TestBinaryTree();
 	//TestDistance();
-	TestCreateBinaryTree();
+	//TestCreateBinaryTree();
+	TestIsCompleteBinaryTree();
 	system("pause");
 	return 0;
 }

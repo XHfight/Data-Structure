@@ -210,9 +210,85 @@ public:
 		return _GetFarthestDistance2(_root, leftDep, rightDep);
 	}
 
+	/*
+	判断一棵二叉树是否是完全二叉树
+	*/
+	//方法一：时间复杂度O(N)
+	//思路：利用层序遍历（只入队非空节点）
+	//(1)当一个结点只有右结点，不是完全二叉树。
+	//(2)当检测出一个结点为叶子结点或只有左结点，则以后的结点都为叶子结点，否则，这棵树不是完全二叉树。
+	bool IsCompleteBinaryTree1()
+	{
+		if (_root == NULL)
+			return true;
+
+		bool isVisited = false; //标记是否访问过叶子结点或只有左结点的结点 
+		queue<Node*> q;
+		q.push(_root);
+		Node* cur = NULL;
+		while (!q.empty())
+		{
+			cur = q.front();
+			q.pop();
+
+			if (cur->_left == NULL && cur->_right == NULL)
+			{
+				isVisited = true;
+			}
+			else
+			{
+				if (isVisited == true)
+					return false;
+				if (cur->_left != NULL && cur->_right == NULL)
+				{
+					isVisited = true;
+					q.push(cur->_left);
+				}
+				else if (cur->_left != NULL && cur->_right != NULL)
+				{
+					q.push(cur->_left);
+					q.push(cur->_right);
+				}
+				else  //左为空，右不为空
+				{
+					return false;
+				}
+			}	
+		}
+		return true;
+	}
+
+	//方法二：时间复杂度：O（N）
+	//思路：利用层序遍历（空结点也入队），如果遇到空结点，跳出，则队列里剩余的结点都应该是空结点，否则，不是完全二叉树。
+	bool IsCompleteBinaryTree2()
+	{
+		if (_root == NULL)
+			return true;
+
+		queue<Node*> q;
+		q.push(_root);
+		Node* cur = NULL;
+		while ( (cur = q.front()) != NULL )
+		{
+			q.pop();
+			q.push(cur->_left);
+			q.push(cur->_right);
+		}
+
+		q.pop();
+
+		while (!q.empty())
+		{
+			cur = q.front();
+			q.pop();
+			if (cur)
+				return false;
+		}
+		return true;
+	}
 
 	/*
-	求树中两个结点的最近公共祖先
+	求二叉树中两个结点的最近公共祖先
 	*/
 
 	//情景一：当这棵树为搜索二叉树
